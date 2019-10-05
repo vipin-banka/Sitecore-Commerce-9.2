@@ -1,0 +1,56 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27004.2002
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{389FC06B-F543-41B8-9874-726DA9878DDC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3A330984-9652-4DA1-99D3-B55E6DEAC6AA}"
+	ProjectSection(SolutionItems) = preProject
+		..\nuget.config = ..\nuget.config
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Sitecore.Commerce.Engine", "src\Sitecore.Commerce.Engine\Sitecore.Commerce.Engine.csproj", "{1B11734A-0DB0-4864-875E-591AA1C7EE8B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plugin.Sample.Payments.Braintree", "src\Plugin.Sample.Payments.Braintree\Plugin.Sample.Payments.Braintree.csproj", "{F762F5C2-C260-4F9C-88A2-1501C61F5A29}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plugin.Sample.Habitat", "src\Plugin.Sample.Habitat\Plugin.Sample.Habitat.csproj", "{C30617ED-65F8-4474-AE4B-72953D5BF02E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Plugin.Sample.AdventureWorks", "src\Plugin.Sample.AdventureWorks\Plugin.Sample.AdventureWorks.csproj", "{9694338D-1285-428B-B726-751649A08852}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1B11734A-0DB0-4864-875E-591AA1C7EE8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B11734A-0DB0-4864-875E-591AA1C7EE8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B11734A-0DB0-4864-875E-591AA1C7EE8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B11734A-0DB0-4864-875E-591AA1C7EE8B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F762F5C2-C260-4F9C-88A2-1501C61F5A29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F762F5C2-C260-4F9C-88A2-1501C61F5A29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F762F5C2-C260-4F9C-88A2-1501C61F5A29}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F762F5C2-C260-4F9C-88A2-1501C61F5A29}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C30617ED-65F8-4474-AE4B-72953D5BF02E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C30617ED-65F8-4474-AE4B-72953D5BF02E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C30617ED-65F8-4474-AE4B-72953D5BF02E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C30617ED-65F8-4474-AE4B-72953D5BF02E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9694338D-1285-428B-B726-751649A08852}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9694338D-1285-428B-B726-751649A08852}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9694338D-1285-428B-B726-751649A08852}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9694338D-1285-428B-B726-751649A08852}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1B11734A-0DB0-4864-875E-591AA1C7EE8B} = {389FC06B-F543-41B8-9874-726DA9878DDC}
+		{F762F5C2-C260-4F9C-88A2-1501C61F5A29} = {389FC06B-F543-41B8-9874-726DA9878DDC}
+		{C30617ED-65F8-4474-AE4B-72953D5BF02E} = {389FC06B-F543-41B8-9874-726DA9878DDC}
+		{9694338D-1285-428B-B726-751649A08852} = {389FC06B-F543-41B8-9874-726DA9878DDC}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {32813392-1C11-4D75-BF11-1ECBEF674669}
+	EndGlobalSection
+EndGlobal
