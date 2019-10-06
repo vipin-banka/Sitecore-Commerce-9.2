@@ -45,7 +45,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
             if (catalogImportPolicy == null)
                 return null;
 
-            var importHandler = catalogImportPolicy.Mappings.ImportHandler(arg, context);
+            var importHandler = catalogImportPolicy.Mappings.ImportHandler(arg);
 
             if (importHandler == null)
                 return null;

@@ -5,7 +5,7 @@ using Sitecore.Commerce.Core;
 namespace Plugin.Accelerator.CatalogImport.Framework.Mappers
 {
     public abstract class BaseEntityComponentMapper<TSourceEntity, TCommerceEntity, TComponent> : BaseComponentMapper<TComponent>
-    where TSourceEntity : class
+    where TSourceEntity : IEntity
     where TCommerceEntity : CommerceEntity
     where TComponent : Component, new()
     {

@@ -9,7 +9,7 @@ using Plugin.Accelerator.CatalogImport.Framework.Abstractions;
 namespace Plugin.Accelerator.CatalogImport.Framework.ImportHandlers
 {
     public abstract class CatalogImportHandler<TSourceEntity> : BaseImportHandler<TSourceEntity, Catalog>
-        where TSourceEntity : class
+        where TSourceEntity : IEntity
     {
         protected string Name { get; set; }
 

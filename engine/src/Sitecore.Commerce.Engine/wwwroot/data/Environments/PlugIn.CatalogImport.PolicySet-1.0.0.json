@@ -20,21 +20,21 @@
               "Key": "Catalog",
               "Type": "Sitecore.Commerce.Plugin.Catalog.Catalog",
               "ImportHandlerTypeName": "Plugin.Accelerator.CatalogImport.Sample.ImportHandlers.SourceCatalogImportHandler, Plugin.Accelerator.CatalogImport.Sample",
-              "FullTypeName": "Plugin.Accelerator.CatalogImport.EntityMappers.SourceCatalogEntityMapper, Plugin.Accelerator.CatalogImport.Sample"
+              "FullTypeName": "Plugin.Accelerator.CatalogImport.Sample.EntityMappers.SourceCatalogEntityMapper, Plugin.Accelerator.CatalogImport.Sample"
             },
             {
               "$type": "Plugin.Accelerator.CatalogImport.Framework.Policy.EntityMapperType, Plugin.Accelerator.CatalogImport.Framework",
               "Key": "Category",
               "Type": "Sitecore.Commerce.Plugin.Catalog.Category",
               "ImportHandlerTypeName": "Plugin.Accelerator.CatalogImport.Sample.ImportHandlers.SourceCategoryImportHandler, Plugin.Accelerator.CatalogImport.Sample",
-              "FullTypeName": "Plugin.Accelerator.CatalogImport.EntityMappers.SourceCategoryEntityMapper, Plugin.Accelerator.CatalogImport.Sample"
+              "FullTypeName": "Plugin.Accelerator.CatalogImport.Sample.EntityMappers.SourceCategoryEntityMapper, Plugin.Accelerator.CatalogImport.Sample"
             },
             {
               "$type": "Plugin.Accelerator.CatalogImport.Framework.Policy.EntityMapperType, Plugin.Accelerator.CatalogImport.Framework",
               "Key": "SellableItem",
               "Type": "Sitecore.Commerce.Plugin.Catalog.SellableItem",
               "ImportHandlerTypeName": "Plugin.Accelerator.CatalogImport.Sample.ImportHandlers.SourceProductImportHandler, Plugin.Accelerator.CatalogImport.Sample",
-              "FullTypeName": "Plugin.Accelerator.CatalogImport.EntityMappers.SourceProductEntityMapper, Plugin.Accelerator.CatalogImport.Sample"
+              "FullTypeName": "Plugin.Accelerator.CatalogImport.Sample.EntityMappers.SourceProductEntityMapper, Plugin.Accelerator.CatalogImport.Sample"
             }
           ],
           "EntityComponentMappings": [

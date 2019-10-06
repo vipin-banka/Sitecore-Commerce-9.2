@@ -24,7 +24,7 @@
                 })
                 .ConfigurePipeline<IConfigureServiceApiPipeline>(configure =>
                 {
-                        configure.Add<ConfigureServiceApiBlock>();
+                    configure.Add<ConfigureServiceApiBlock>();
                 })
                 .AddPipeline<IImportEntityPipeline, ImportEntityPipeline>(configure =>
                 {
@@ -62,10 +62,10 @@
                 })
                 .AddPipeline<IImportLocalizeContentPipeline, ImportLocalizeContentPipeline>(configure =>
                 {
-                ////    configure                        
-                ////        .Add<GetLocalizePropertiesBlock>()
-                ////        .Add<GetLocalizationEntityBlock>()
-                ////        .Add<SetLocalizePropertiesBlock>();
+                    configure
+                        .Add<GetLocalizePropertiesBlock>()
+                        .Add<GetLocalizationEntityBlock>()
+                        .Add<SetLocalizePropertiesBlock>();
                 })
             );
 

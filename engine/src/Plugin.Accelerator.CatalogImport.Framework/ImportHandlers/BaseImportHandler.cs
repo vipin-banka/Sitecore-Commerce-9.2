@@ -1,14 +1,18 @@
 ﻿using Newtonsoft.Json;
 using Sitecore.Commerce.Core;
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Plugin.Accelerator.CatalogImport.Framework.Abstractions;
+using Plugin.Accelerator.CatalogImport.Framework.Extensions;
+using Plugin.Accelerator.CatalogImport.Framework.Metadata;
 
 namespace Plugin.Accelerator.CatalogImport.Framework.ImportHandlers
 {
     public abstract class BaseImportHandler<TSourceEntity, TCommerceEntity> : IImportHandler
-    where TSourceEntity : class
+    where TSourceEntity : IEntity
     where TCommerceEntity : CommerceEntity
     {
         public TSourceEntity SourceEntity { get; }
@@ -18,17 +22,14 @@ namespace Plugin.Accelerator.CatalogImport.Framework.ImportHandlers
             this.SourceEntity = JsonConvert.DeserializeObject<TSourceEntity>(sourceEntity);
         }
 
-        public string EntityId
-        {
-            get { return IdWithPrefix(); }
-        }
+        public string EntityId => IdWithPrefix();
 
-        public object GetSourceEntity()
+        public IEntity GetSourceEntity()
         {
             return this.SourceEntity;
         }
 
-        protected abstract string Id { get; }
+        protected virtual string Id => typeof(TSourceEntity).GetPropertyValueWithAttribute<EntityIdAttribute, string>(this.SourceEntity);
 
         protected string IdWithPrefix()
         {
@@ -36,7 +37,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.ImportHandlers
             var id = this.Id;
             if (!id.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
             {
-                return string.Format("{0}{1}", prefix, id);
+                return $"{prefix}{id}";
             }
 
             return id;
@@ -48,19 +49,43 @@ namespace Plugin.Accelerator.CatalogImport.Framework.ImportHandlers
 
         public abstract Task<CommerceEntity> Create(IServiceProvider serviceProvider, IDictionary<string, IList<string>> parents, CommercePipelineExecutionContext context);
 
-        public abstract IList<string> GetParentList();
+        public virtual IList<string> GetParentList()
+        {
+            return typeof(TSourceEntity).GetPropertyValueWithAttribute<ParentsAttribute, IList<string>>(this.SourceEntity);
+        }
 
-        public abstract bool HasVariants();
+        public virtual bool HasVariants()
+        {
+            var variants = typeof(TSourceEntity).GetPropertyValueWithAttribute<VariantsAttribute, IEnumerable>(this.SourceEntity);
+            return variants != null && variants.GetEnumerator().MoveNext();
+        }
 
-        public abstract IList<IEntity> GetVariants();
+        public virtual IList<IEntity> GetVariants()
+        {
+            var variants = typeof(TSourceEntity).GetPropertyValueWithAttribute<VariantsAttribute, IEnumerable>(this.SourceEntity);
+
+            if (variants != null)
+            {
+                return variants.Cast<IEntity>().ToList();
+            }
+
+            return new List<IEntity>();
+        }
 
         public virtual bool HasLanguages()
         {
-            return false;
+            var languages = typeof(TSourceEntity).GetPropertyValueWithAttribute<LanguagesAttribute, IEnumerable>(this.SourceEntity);
+            return languages != null && languages.GetEnumerator().MoveNext();
         }
 
         public virtual IList<ILanguageEntity> GetLanguages()
         {
+            var languages = typeof(TSourceEntity).GetPropertyValueWithAttribute<LanguagesAttribute, IEnumerable>(this.SourceEntity);
+            if (languages != null)
+            {
+                return languages.Cast<ILanguageEntity>().ToList();
+            }
+
             return new List<ILanguageEntity>();
         }
 

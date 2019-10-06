@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Plugin.Accelerator.CatalogImport.Framework.Entity;
+using Plugin.Accelerator.CatalogImport.Framework.Metadata;
 
 namespace Plugin.Accelerator.CatalogImport.Sample.Entity
 {
@@ -19,10 +20,10 @@ namespace Plugin.Accelerator.CatalogImport.Sample.Entity
 
         public string Dimensions { get; set; }
 
+        [Languages()]
         public IList<LanguageEntity<SourceProduct>> Languages { get; set; }
 
-        public IList<string> VariantComponents { get; set; }
-
+        [Variants()]
         public IList<SourceProductVariant> Variants { get; set; }
     }
 }

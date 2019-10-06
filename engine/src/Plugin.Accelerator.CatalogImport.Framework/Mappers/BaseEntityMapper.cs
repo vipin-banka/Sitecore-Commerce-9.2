@@ -9,7 +9,7 @@ using System.Linq;
 namespace Plugin.Accelerator.CatalogImport.Framework.Mappers
 {
     public abstract class BaseEntityMapper<TSourceEntity, TCommerceEntity> : IEntityMapper, IEntityLocalizationMapper
-        where TSourceEntity : class
+        where TSourceEntity : IEntity
         where TCommerceEntity : CommerceEntity, new()
     {
         public TSourceEntity SourceEntity { get; }
@@ -17,11 +17,6 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Mappers
         public TCommerceEntity CommerceEntity { get; }
 
         public CommercePipelineExecutionContext Context { get; }
-
-        protected BaseEntityMapper(CommercePipelineExecutionContext context)
-        : this(null, null, context)
-        {
-        }
 
         protected BaseEntityMapper(TSourceEntity sourceEntity, TCommerceEntity commerceEntity, CommercePipelineExecutionContext context)
         {

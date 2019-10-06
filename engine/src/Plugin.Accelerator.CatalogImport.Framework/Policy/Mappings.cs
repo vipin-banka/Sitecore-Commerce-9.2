@@ -19,7 +19,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Policy
 
         public IList<MapperType> ItemVariantionComponentMappings { get; set; }
 
-        public IImportHandler ImportHandler(ImportEntityArgument importEntityArgument, CommercePipelineExecutionContext context)
+        public IImportHandler ImportHandler(ImportEntityArgument importEntityArgument)
         {
             var handlerType = this
                 .EntityMappings
@@ -34,7 +34,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Policy
                     throw new InvalidOperationException("Entity mapper type cannot be null.");
                 }
 
-                if (Activator.CreateInstance(t, importEntityArgument.SourceEntityDetail.SerializedEntity, context) is
+                if (Activator.CreateInstance(t, importEntityArgument.SourceEntityDetail.SerializedEntity) is
                     IImportHandler handler)
                 {
                     return handler;

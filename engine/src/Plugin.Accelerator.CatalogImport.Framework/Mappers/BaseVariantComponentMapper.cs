@@ -2,12 +2,13 @@
 using Sitecore.Commerce.Core;
 using Sitecore.Commerce.Plugin.Catalog;
 using System.Globalization;
+using Plugin.Accelerator.CatalogImport.Framework.Abstractions;
 
 namespace Plugin.Accelerator.CatalogImport.Framework.Mappers
 {
     public abstract class BaseVariantComponentMapper<TSourceEntity, TSourceVariant, TCommerceEntity, TComponent> : BaseEntityComponentMapper<TSourceEntity, TCommerceEntity, TComponent>
-        where TSourceEntity : class
-        where TSourceVariant : class
+        where TSourceEntity : IEntity
+        where TSourceVariant : IEntity
         where TCommerceEntity : CommerceEntity
         where TComponent : Component, new()
     {

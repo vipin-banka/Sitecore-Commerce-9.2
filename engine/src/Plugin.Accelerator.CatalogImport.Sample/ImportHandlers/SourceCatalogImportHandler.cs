@@ -13,23 +13,10 @@ namespace Plugin.Accelerator.CatalogImport.Sample.ImportHandlers
         {
         }
 
-        protected override string Id => this.SourceEntity.Id;
-
         protected override void Initialize()
         {
             this.Name = this.SourceEntity.Name;
             this.DisplayName = this.SourceEntity.DisplayName;
-        }
-
-        public override bool HasLanguages()
-        {
-            return this.SourceEntity.Languages != null
-                   && this.SourceEntity.Languages.Any();
-        }
-
-        public override IList<ILanguageEntity> GetLanguages()
-        {
-            return this.SourceEntity.Languages.Select(x => x as ILanguageEntity).ToList();
         }
     }
 }

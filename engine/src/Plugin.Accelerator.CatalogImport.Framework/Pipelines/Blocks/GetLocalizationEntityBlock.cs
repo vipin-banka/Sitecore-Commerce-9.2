@@ -17,7 +17,8 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
 
         public override async Task<ImportLocalizeContentArgument> Run(ImportLocalizeContentArgument arg, CommercePipelineExecutionContext context)
         {
-            if (arg.CommerceEntity != null)
+            if (arg.CommerceEntity != null 
+                && arg.HasLocalizationContent)
             {
                 var localizationEntityId = arg.CommerceEntity.Id.ToLocalizationEntityId();
                 var localizationEntity = await this._findEntityPipeline.Run(new FindEntityArgument(typeof(LocalizationEntity), localizationEntityId, arg.CommerceEntity.EntityVersion, false), context).ConfigureAwait(false);

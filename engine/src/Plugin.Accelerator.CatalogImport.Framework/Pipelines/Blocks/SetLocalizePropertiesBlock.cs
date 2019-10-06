@@ -19,6 +19,9 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
 
         public override async Task<ImportLocalizeContentArgument> Run(ImportLocalizeContentArgument arg, CommercePipelineExecutionContext context)
         {
+            if (!arg.HasLocalizationContent || arg.LocalizationEntity == null)
+                return arg;
+
             if (arg.Properties != null && arg.Properties.Any())
             {
                 foreach (var property in arg.Properties)

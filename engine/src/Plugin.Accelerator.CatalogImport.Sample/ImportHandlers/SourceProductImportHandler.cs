@@ -14,8 +14,6 @@ namespace Plugin.Accelerator.CatalogImport.Sample.ImportHandlers
         {
         }
 
-        protected override string Id => this.SourceEntity.Id;
-
         protected override void Initialize()
         {
             this.ProductId = this.SourceEntity.Id;
@@ -25,32 +23,6 @@ namespace Plugin.Accelerator.CatalogImport.Sample.ImportHandlers
             this.Brand = string.Empty;
             this.Manufacturer = string.Empty;
             this.TypeOfGood = string.Empty;
-        }
-
-        public override IList<string> GetParentList()
-        {
-            return this.SourceEntity.Parents;
-        }
-
-        public override bool HasVariants()
-        {
-            return this.SourceEntity.Variants != null && this.SourceEntity.Variants.Any();
-        }
-
-        public override IList<IEntity> GetVariants()
-        {
-            return this.SourceEntity.Variants.Select(x=>x as IEntity).ToList();
-        }
-
-        public override bool HasLanguages()
-        {
-            return this.SourceEntity.Languages != null
-                   && this.SourceEntity.Languages.Any();
-        }
-
-        public override IList<ILanguageEntity> GetLanguages()
-        {
-            return this.SourceEntity.Languages.Select(x => x as ILanguageEntity).ToList();
         }
 
         public override bool HasVariants(ILanguageEntity languageEntity)

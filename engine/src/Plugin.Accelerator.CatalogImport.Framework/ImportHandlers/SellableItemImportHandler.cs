@@ -4,11 +4,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Plugin.Accelerator.CatalogImport.Framework.Abstractions;
 
 namespace Plugin.Accelerator.CatalogImport.Framework.ImportHandlers
 {
     public abstract class SellableItemImportHandler<TSourceEntity> : BaseImportHandler<TSourceEntity, SellableItem>
-        where TSourceEntity : class
+        where TSourceEntity : IEntity
     {
         protected string ProductId { get; set; }
 

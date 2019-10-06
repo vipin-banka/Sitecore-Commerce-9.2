@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Plugin.Accelerator.CatalogImport.Framework.Abstractions;
+using Plugin.Accelerator.CatalogImport.Framework.Metadata;
 
 namespace Plugin.Accelerator.CatalogImport.Sample.Entity
 {
@@ -10,6 +11,7 @@ namespace Plugin.Accelerator.CatalogImport.Sample.Entity
             this.Parents = new List<string>();
         }
 
+        [EntityId()]
         public string Id { get; set; }
 
         public string Name { get; set; }
@@ -18,6 +20,7 @@ namespace Plugin.Accelerator.CatalogImport.Sample.Entity
 
         public string Description { get; set; }
 
+        [Parents()]
         public IList<string> Parents { get; set; }
     }
 }

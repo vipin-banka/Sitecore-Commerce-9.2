@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Plugin.Accelerator.CatalogImport.Framework.Entity;
+using Plugin.Accelerator.CatalogImport.Framework.Metadata;
 
 namespace Plugin.Accelerator.CatalogImport.Sample.Entity
 {
@@ -10,6 +11,7 @@ namespace Plugin.Accelerator.CatalogImport.Sample.Entity
             this.Languages = new List<LanguageEntity<SourceCategory>>();
         }
 
+        [Languages()]
         public IList<LanguageEntity<SourceCategory>> Languages { get; set; }
     }
 }

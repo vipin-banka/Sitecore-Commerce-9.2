@@ -36,8 +36,11 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Commands
                         await this.PerformTransaction(commerceContext, async () => await this.Pipeline<IAssociateParentsPipeline>().Run(importEntityArgument, commerceContext.PipelineContextOptions));
                     }
 
-                    ////// Manage localization values for sellable item
-                    ////await this.PerformTransaction(commerceContext, async () => await this.Pipeline<IImportLocalizeContentPipeline>().Run(new ImportLocalizeContentArgument(result.Id, product, result), commerceContext.PipelineContextOptions));
+                    // Manage localization values for sellable item
+                    var importLocalizeContentArgument =
+                        new ImportLocalizeContentArgument(result, importEntityArgument.ImportHandler);
+                    await this.PerformTransaction(commerceContext, async () => await this.Pipeline<IImportLocalizeContentPipeline>().Run(
+                        importLocalizeContentArgument, commerceContext.PipelineContextOptions));
                 }
             }
 

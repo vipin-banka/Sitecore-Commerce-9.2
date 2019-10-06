@@ -19,6 +19,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Plugin.Accelerator.Catalog.Sample\Plugin.Accelerator.Catalog.Sample.csproj" />
+    <ProjectReference Include="..\Plugin.Accelerator.CatalogImport.Framework\Plugin.Accelerator.CatalogImport.Framework.csproj" />
+    <ProjectReference Include="..\Plugin.Accelerator.CatalogImport.Sample\Plugin.Accelerator.CatalogImport.Sample.csproj" />
     <ProjectReference Include="..\Plugin.Sample.AdventureWorks\Plugin.Sample.AdventureWorks.csproj" />
     <ProjectReference Include="..\Plugin.Sample.Habitat\Plugin.Sample.Habitat.csproj" />
     <ProjectReference Include="..\Plugin.Sample.Payments.Braintree\Plugin.Sample.Payments.Braintree.csproj" />

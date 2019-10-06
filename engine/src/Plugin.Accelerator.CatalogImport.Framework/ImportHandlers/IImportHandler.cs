@@ -15,7 +15,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.ImportHandlers
 
         Task<CommerceEntity> Create(IServiceProvider serviceProvider, IDictionary<string, IList<string>> parents, CommercePipelineExecutionContext context);
 
-        object GetSourceEntity();
+        IEntity GetSourceEntity();
 
         IList<string> GetParentList();
 

@@ -23,14 +23,20 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Controllers
             if (!this.ModelState.IsValid || value == null)
                 return new BadRequestObjectResult(this.ModelState);
 
-            if (!value.ContainsKey("sourceEntity") || value["sourceEntity"] == null)
+            if (!value.ContainsKey("metadata") || value["metadata"] == null)
                 return new BadRequestObjectResult(value);
 
-            var sourceEntity = JsonConvert.DeserializeObject<SourceEntityDetail>(value["sourceEntity"].ToString());
+            if (!value.ContainsKey("entity") || value["entity"] == null)
+                return new BadRequestObjectResult(value);
+
+            var metadata = value["metadata"].ToString();
+            var entity = value["entity"].ToString();
+            var sourceEntity = JsonConvert.DeserializeObject<SourceEntityDetail>(metadata);
+            sourceEntity.SerializedEntity = entity;
 
             var command = this.Command<ImportEntityCommand>();
             var commerceEntity = await command.Process(this.CurrentContext, sourceEntity);
-            return new ObjectResult(commerceEntity);
+            return new ObjectResult(command);
         }
     }
 }
