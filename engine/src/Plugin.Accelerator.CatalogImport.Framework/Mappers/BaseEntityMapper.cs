@@ -8,20 +8,24 @@ using System.Linq;
 
 namespace Plugin.Accelerator.CatalogImport.Framework.Mappers
 {
-    public abstract class BaseEntityMapper<T> : IEntityMapper, IEntityLocalizationMapper
-        where T : CommerceEntity, new()
+    public abstract class BaseEntityMapper<TSourceEntity, TCommerceEntity> : IEntityMapper, IEntityLocalizationMapper
+        where TSourceEntity : class
+        where TCommerceEntity : CommerceEntity, new()
     {
-        public T CommerceEntity { get; }
+        public TSourceEntity SourceEntity { get; }
+
+        public TCommerceEntity CommerceEntity { get; }
 
         public CommercePipelineExecutionContext Context { get; }
 
         protected BaseEntityMapper(CommercePipelineExecutionContext context)
-        : this(null, context)
+        : this(null, null, context)
         {
         }
 
-        protected BaseEntityMapper(T commerceEntity, CommercePipelineExecutionContext context)
+        protected BaseEntityMapper(TSourceEntity sourceEntity, TCommerceEntity commerceEntity, CommercePipelineExecutionContext context)
         {
+            this.SourceEntity = sourceEntity;
             this.CommerceEntity = commerceEntity;
             this.Context = context;
         }
@@ -32,11 +36,11 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Mappers
 
         public virtual IList<LocalizablePropertyValues> Map(string language, IList<LocalizablePropertyValues> entityLocalizableProperties)
         {
-            Type t = typeof(T);
+            Type t = typeof(TCommerceEntity);
             if (t == null)
                 throw new InvalidOperationException("Type cannot be null.");
 
-            var entity = Activator.CreateInstance(t) as T;
+            var entity = Activator.CreateInstance(t) as TCommerceEntity;
 
             this.MapLocalizeValues(entity);
 
@@ -81,7 +85,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Mappers
             return entityLocalizableProperties;
         }
 
-        protected virtual void MapLocalizeValues(T entity)
+        protected virtual void MapLocalizeValues(TCommerceEntity entity)
         {
         }
     }

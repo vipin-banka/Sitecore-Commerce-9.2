@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
+using Plugin.Accelerator.CatalogImport.Framework.Abstractions;
 
 namespace Plugin.Accelerator.CatalogImport.Sample.Entity
 {
-    public class BaseEntity
+    public class BaseEntity : IEntity
     {
         public BaseEntity()
         {
-            this.Components = new List<string>();
             this.Parents = new List<string>();
         }
 
@@ -17,8 +17,6 @@ namespace Plugin.Accelerator.CatalogImport.Sample.Entity
         public string DisplayName { get; set; }
 
         public string Description { get; set; }
-
-        public IList<string> Components { get; set; }
 
         public IList<string> Parents { get; set; }
     }
