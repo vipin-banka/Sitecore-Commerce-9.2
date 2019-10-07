@@ -22,7 +22,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.ImportHandlers
 
         public CommercePipelineExecutionContext Context { get; }
 
-        protected IDictionary<string, IList<string>> parentEntityIds;
+        public IDictionary<string, IList<string>> ParentEntityIds { get; set; }
 
         public BaseEntityImportHandler(string sourceEntity, CommercePipelineExecutionContext context)
         {
@@ -70,11 +70,6 @@ namespace Plugin.Accelerator.CatalogImport.Framework.ImportHandlers
         public virtual IList<string> GetParentList()
         {
             return typeof(TSourceEntity).GetPropertyValueWithAttribute<ParentsAttribute, IList<string>>(this.SourceEntity);
-        }
-
-        public virtual void SetParentEntityIds(IDictionary<string, IList<string>> parentEntityIdList)
-        {
-            this.parentEntityIds = parentEntityIdList;
         }
 
         public virtual bool HasLanguages()

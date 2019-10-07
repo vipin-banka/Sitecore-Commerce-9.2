@@ -19,16 +19,17 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
 
         public override async Task<ImportEntityArgument> Run(ImportEntityArgument arg, CommercePipelineExecutionContext context)
         {
-            string entityId = arg.CommerceEntity.Id;
+            var commerceEntity = arg.ImportHandler.GetCommerceEntity();
+            string entityId = commerceEntity.Id;
 
-            if (arg.Parents == null
-                || !arg.Parents.Any()
-                || !(arg.CommerceEntity is Category))
+            if (arg.ImportHandler.ParentEntityIds == null
+                || !arg.ImportHandler.ParentEntityIds.Any()
+                || !(commerceEntity is Category))
             {
                 return await Task.FromResult(arg);
             }
 
-            foreach (var catalog in arg.Parents)
+            foreach (var catalog in arg.ImportHandler.ParentEntityIds)
             {
                 if (catalog.Value == null || !catalog.Value.Any())
                 {

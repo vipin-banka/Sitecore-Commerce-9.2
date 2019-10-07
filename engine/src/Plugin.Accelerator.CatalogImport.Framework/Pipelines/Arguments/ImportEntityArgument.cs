@@ -10,19 +10,14 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Arguments
         public ImportEntityArgument(SourceEntityDetail sourceEntityDetail)
         {
             this.SourceEntityDetail = sourceEntityDetail;
-            this.Parents = new Dictionary<string, IList<string>>();
         }
 
         public SourceEntityDetail SourceEntityDetail { get; set; }
 
         public object SourceEntity { get; set; }
 
-        public IDictionary<string, IList<string>> Parents { get; set; }
-
         public bool IsNew { get; set; }
 
         public IEntityImportHandler ImportHandler { get; set; }
-
-        public CommerceEntity CommerceEntity { get; set; }
     }
 }

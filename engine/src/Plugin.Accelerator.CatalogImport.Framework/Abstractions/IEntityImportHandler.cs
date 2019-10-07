@@ -9,6 +9,8 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Abstractions
     {
         string EntityId { get; }
 
+        IDictionary<string, IList<string>> ParentEntityIds { get; set; }
+
         Task<CommerceEntity> Create(IServiceProvider serviceProvider, CommercePipelineExecutionContext context);
 
         IEntity GetSourceEntity();
@@ -18,8 +20,6 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Abstractions
         void SetCommerceEntity(CommerceEntity commerceEntity);
 
         IList<string> GetParentList();
-
-        void SetParentEntityIds(IDictionary<string, IList<string>> parentEntityIds);
 
         bool HasVariants();
 

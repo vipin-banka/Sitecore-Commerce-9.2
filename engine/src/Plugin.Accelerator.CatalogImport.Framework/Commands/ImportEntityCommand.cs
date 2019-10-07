@@ -30,7 +30,8 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Commands
 
                 if (result != null)
                 {
-                    if (importEntityArgument.Parents != null && importEntityArgument.Parents.Any())
+                    if (importEntityArgument.ImportHandler.ParentEntityIds != null 
+                        && importEntityArgument.ImportHandler.ParentEntityIds.Any())
                     {
                         // Manage association of sellable item with catalog and categories.
                         await this.PerformTransaction(commerceContext, async () => await this.Pipeline<IAssociateParentsPipeline>().Run(importEntityArgument, commerceContext.PipelineContextOptions));
