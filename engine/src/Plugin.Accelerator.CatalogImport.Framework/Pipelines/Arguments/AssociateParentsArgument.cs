@@ -1,5 +1,4 @@
 ﻿using Sitecore.Commerce.Core;
-using System.Collections.Generic;
 
 namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Arguments
 {

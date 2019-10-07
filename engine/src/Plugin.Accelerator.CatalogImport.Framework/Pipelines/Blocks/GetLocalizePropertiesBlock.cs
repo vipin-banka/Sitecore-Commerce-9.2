@@ -1,6 +1,7 @@
-﻿using Plugin.Accelerator.CatalogImport.Framework.Model;
-using Plugin.Accelerator.CatalogImport.Framework.Policy;
+﻿using Plugin.Accelerator.CatalogImport.Framework.Abstractions;
+using Plugin.Accelerator.CatalogImport.Framework.Model;
 using Plugin.Accelerator.CatalogImport.Framework.Pipelines.Arguments;
+using Plugin.Accelerator.CatalogImport.Framework.Policy;
 using Sitecore.Commerce.Core;
 using Sitecore.Commerce.Plugin.Catalog;
 using Sitecore.Framework.Pipelines;
@@ -25,14 +26,21 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
 
                 foreach (var language in arg.ImportHandler.GetLanguages())
                 {
-                    entityLocalizableProperties = catalogImportPolicy
-                        .Mappings
-                        .GetEntityLocalizableProperties(
-                            language.GetEntity(),
-                            arg.CommerceEntity.GetType(),
-                            language.Language,
-                            entityLocalizableProperties,
-                            context);
+                    if (arg.ImportHandler is IEntityLocalizationMapper mapper)
+                    {
+                        entityLocalizableProperties = mapper.Map(language.Language, entityLocalizableProperties);
+                    }
+                    else
+                    {
+                        entityLocalizableProperties = catalogImportPolicy
+                            .Mappings
+                            .GetEntityLocalizableProperties(
+                                language.GetEntity(),
+                                arg.CommerceEntity.GetType(),
+                                language.Language,
+                                entityLocalizableProperties,
+                                context);
+                    }
 
                     if (arg.CommerceEntity.EntityComponents == null || !arg.CommerceEntity.EntityComponents.Any())
                         continue;
@@ -62,21 +70,21 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
                         if (itemVariationComponent == null)
                             continue;
 
-                        IList<Component> componentsList = new List<Component> { itemVariationComponent };
+                        catalogImportPolicy.Mappings.GetItemVariantComponentLocalizableProperties(
+                            arg.CommerceEntity,
+                            itemVariationComponent,
+                            language.GetEntity(),
+                            variant,
+                            language.Language,
+                            componentsPropertiesList,
+                            context);
 
-                        if (itemVariationComponent.ChildComponents != null ||
-                            itemVariationComponent.ChildComponents.Any())
+                        if (itemVariationComponent.ChildComponents != null 
+                            && itemVariationComponent.ChildComponents.Any())
                         {
-                            itemVariationComponent.ChildComponents.Select(x =>
+                            foreach (var component in itemVariationComponent.ChildComponents)
                             {
-                                componentsList.Add(x);
-                                return x;
-                            }).ToList();
-                        }
-
-                        foreach (var component in componentsList)
-                        {
-                            catalogImportPolicy.Mappings.GetVariantComponentsLocalizableProperties(
+                                catalogImportPolicy.Mappings.GetVariantComponentsLocalizableProperties(
                                     arg.CommerceEntity,
                                     component,
                                     language.GetEntity(),
@@ -84,6 +92,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
                                     language.Language,
                                     componentsPropertiesList,
                                     context);
+                            }
                         }
                     }
                 }

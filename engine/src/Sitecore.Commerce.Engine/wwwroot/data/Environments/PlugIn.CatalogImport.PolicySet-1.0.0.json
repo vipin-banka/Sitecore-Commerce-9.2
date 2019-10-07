@@ -19,22 +19,19 @@
               "$type": "Plugin.Accelerator.CatalogImport.Framework.Policy.EntityMapperType, Plugin.Accelerator.CatalogImport.Framework",
               "Key": "Catalog",
               "Type": "Sitecore.Commerce.Plugin.Catalog.Catalog",
-              "ImportHandlerTypeName": "Plugin.Accelerator.CatalogImport.Sample.ImportHandlers.SourceCatalogImportHandler, Plugin.Accelerator.CatalogImport.Sample",
-              "FullTypeName": "Plugin.Accelerator.CatalogImport.Sample.EntityMappers.SourceCatalogEntityMapper, Plugin.Accelerator.CatalogImport.Sample"
+              "ImportHandlerTypeName": "Plugin.Accelerator.CatalogImport.Sample.EntityImportHandlers.SourceCatalogImportHandler, Plugin.Accelerator.CatalogImport.Sample"
             },
             {
               "$type": "Plugin.Accelerator.CatalogImport.Framework.Policy.EntityMapperType, Plugin.Accelerator.CatalogImport.Framework",
               "Key": "Category",
               "Type": "Sitecore.Commerce.Plugin.Catalog.Category",
-              "ImportHandlerTypeName": "Plugin.Accelerator.CatalogImport.Sample.ImportHandlers.SourceCategoryImportHandler, Plugin.Accelerator.CatalogImport.Sample",
-              "FullTypeName": "Plugin.Accelerator.CatalogImport.Sample.EntityMappers.SourceCategoryEntityMapper, Plugin.Accelerator.CatalogImport.Sample"
+              "ImportHandlerTypeName": "Plugin.Accelerator.CatalogImport.Sample.EntityImportHandlers.SourceCategoryImportHandler, Plugin.Accelerator.CatalogImport.Sample"
             },
             {
               "$type": "Plugin.Accelerator.CatalogImport.Framework.Policy.EntityMapperType, Plugin.Accelerator.CatalogImport.Framework",
               "Key": "SellableItem",
               "Type": "Sitecore.Commerce.Plugin.Catalog.SellableItem",
-              "ImportHandlerTypeName": "Plugin.Accelerator.CatalogImport.Sample.ImportHandlers.SourceProductImportHandler, Plugin.Accelerator.CatalogImport.Sample",
-              "FullTypeName": "Plugin.Accelerator.CatalogImport.Sample.EntityMappers.SourceProductEntityMapper, Plugin.Accelerator.CatalogImport.Sample"
+              "ImportHandlerTypeName": "Plugin.Accelerator.CatalogImport.Sample.EntityImportHandlers.SourceProductImportHandler, Plugin.Accelerator.CatalogImport.Sample"
             }
           ],
           "EntityComponentMappings": [
@@ -42,20 +39,20 @@
               "$type": "Plugin.Accelerator.CatalogImport.Framework.Policy.MapperType, Plugin.Accelerator.CatalogImport.Framework",
               "Key": "ProductHierarchyRoot",
               "Type": "Plugin.Accelerator.Catalog.Sample.Components.ProductHierarchyRootComponent",
-              "FullTypeName": "Plugin.Accelerator.CatalogImport.Sample.EntityComponentMappers.ProductHierarchyRootComponentMapper, Plugin.Accelerator.CatalogImport.Sample"
+              "FullTypeName": "Plugin.Accelerator.CatalogImport.Sample.Mappers.EntityComponentMappers.ProductHierarchyRootComponentMapper, Plugin.Accelerator.CatalogImport.Sample"
             },
             {
               "$type": "Plugin.Accelerator.CatalogImport.Framework.Policy.MapperType, Plugin.Accelerator.CatalogImport.Framework",
               "Key": "Hardware",
               "Type": "Plugin.Accelerator.Catalog.Sample.Components.HardwareComponent",
-              "FullTypeName": "Plugin.Accelerator.CatalogImport.Sample.EntityComponentMappers.HardwareComponentMapper, Plugin.Accelerator.CatalogImport.Sample"
+              "FullTypeName": "Plugin.Accelerator.CatalogImport.Sample.Mappers.EntityComponentMappers.HardwareComponentMapper, Plugin.Accelerator.CatalogImport.Sample"
             }
           ],
           "ItemVariantionMappings": [
             {
               "$type": "Plugin.Accelerator.CatalogImport.Framework.Policy.MapperType, Plugin.Accelerator.CatalogImport.Framework",
               "Type": "Sitecore.Commerce.Plugin.Catalog.ItemVariationComponent",
-              "FullTypeName": "Plugin.Accelerator.CatalogImport.Sample.VariantComponentMappers.ItemVariationComponentMapper, Plugin.Accelerator.CatalogImport.Sample"
+              "FullTypeName": "Plugin.Accelerator.CatalogImport.Sample.Mappers.ItemVariantComponentMappers.ItemVariationComponentMapper, Plugin.Accelerator.CatalogImport.Sample"
             }
           ],
           "ItemVariantionComponentMappings": [
@@ -63,7 +60,7 @@
               "$type": "Plugin.Accelerator.CatalogImport.Framework.Policy.MapperType, Plugin.Accelerator.CatalogImport.Framework",
               "Key": "Variant",
               "Type": "Plugin.Accelerator.Catalog.Components.VariantComponent",
-              "FullTypeName": "Plugin.Accelerator.CatalogImport.Sample.VariantComponentMappers.VariantComponentMapper, Plugin.Accelerator.CatalogImport.Sample"
+              "FullTypeName": "Plugin.Accelerator.CatalogImport.Sample.Mappers.VariantComponentMappers.VariantComponentMapper, Plugin.Accelerator.CatalogImport.Sample"
             }
           ]
         }

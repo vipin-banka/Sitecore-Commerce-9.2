@@ -1,4 +1,4 @@
-﻿using Plugin.Accelerator.CatalogImport.Framework.ImportHandlers;
+﻿using Plugin.Accelerator.CatalogImport.Framework.Abstractions;
 using Plugin.Accelerator.CatalogImport.Framework.Model;
 using Sitecore.Commerce.Core;
 using System.Collections.Generic;
@@ -21,7 +21,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Arguments
 
         public bool IsNew { get; set; }
 
-        public IImportHandler ImportHandler { get; set; }
+        public IEntityImportHandler ImportHandler { get; set; }
 
         public CommerceEntity CommerceEntity { get; set; }
     }

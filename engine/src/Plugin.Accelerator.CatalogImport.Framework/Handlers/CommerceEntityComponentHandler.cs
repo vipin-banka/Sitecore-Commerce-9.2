@@ -1,7 +1,7 @@
-﻿using System;
-using System.Linq;
-using Plugin.Accelerator.CatalogImport.Framework.Abstractions;
+﻿using Plugin.Accelerator.CatalogImport.Framework.Abstractions;
 using Sitecore.Commerce.Core;
+using System;
+using System.Linq;
 
 namespace Plugin.Accelerator.CatalogImport.Framework.Handlers
 {

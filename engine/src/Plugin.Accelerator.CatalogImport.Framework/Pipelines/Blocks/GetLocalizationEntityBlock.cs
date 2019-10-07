@@ -1,8 +1,8 @@
-﻿using Sitecore.Commerce.Core;
+﻿using Plugin.Accelerator.CatalogImport.Framework.Extensions;
+using Plugin.Accelerator.CatalogImport.Framework.Pipelines.Arguments;
+using Sitecore.Commerce.Core;
 using Sitecore.Framework.Pipelines;
 using System.Threading.Tasks;
-using Plugin.Accelerator.CatalogImport.Framework.Extensions;
-using Plugin.Accelerator.CatalogImport.Framework.Pipelines.Arguments;
 
 namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
 {

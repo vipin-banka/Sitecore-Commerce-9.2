@@ -3,7 +3,7 @@ using Plugin.Accelerator.CatalogImport.Sample.Entity;
 using Sitecore.Commerce.Core;
 using Sitecore.Commerce.Plugin.Catalog;
 
-namespace Plugin.Accelerator.CatalogImport.Sample.VariantComponentMappers
+namespace Plugin.Accelerator.CatalogImport.Sample.Mappers.ItemVariantComponentMappers
 {
     public class ItemVariationComponentMapper : BaseItemVariationComponentMapper<SourceProduct, SourceProductVariant, CommerceEntity>
     {

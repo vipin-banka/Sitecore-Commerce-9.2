@@ -1,14 +1,13 @@
-﻿using System;
-using System.Collections.Concurrent;
-using Plugin.Accelerator.CatalogImport.Framework.Pipelines.Arguments;
+﻿using Plugin.Accelerator.CatalogImport.Framework.Pipelines.Arguments;
+using Plugin.Accelerator.CatalogImport.Framework.Policy;
 using Sitecore.Commerce.Core;
 using Sitecore.Commerce.Core.Commands;
 using Sitecore.Commerce.Plugin.Catalog;
 using Sitecore.Framework.Pipelines;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Plugin.Accelerator.CatalogImport.Framework.Policy;
 using CommerceEntity = Sitecore.Commerce.Core.CommerceEntity;
 
 namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
@@ -45,7 +44,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
             if (catalogImportPolicy == null)
                 return null;
 
-            var importHandler = catalogImportPolicy.Mappings.ImportHandler(arg);
+            var importHandler = catalogImportPolicy.Mappings.GetImportHandlerInstance(arg, context);
 
             if (importHandler == null)
                 return null;
@@ -65,13 +64,12 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
             string entityId = importHandler.EntityId;
             var entity = await this._findEntityCommand.Process(context.CommerceContext, typeof(CommerceEntity), entityId)
                 .ConfigureAwait(false);
-
             arg.CommerceEntity = entity;
 
             if (entity == null)
             {
                 arg.IsNew = true;
-                // run create 
+                // create new entity
                 entity = await importHandler.Create(this._serviceProvider, arg.Parents, context).ConfigureAwait(false);
 
                 arg.CommerceEntity = entity;
@@ -79,7 +77,9 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
             else
             {
                 arg.IsNew = false;
-                // run update
+                importHandler.SetCommerceEntity(entity);
+
+                // update existing entity
                 await this._setComponentsPipeline.Run(entity, context)
                     .ConfigureAwait(false);
 

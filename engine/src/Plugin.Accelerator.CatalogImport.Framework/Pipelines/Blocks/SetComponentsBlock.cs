@@ -15,14 +15,11 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
         public override Task<CommerceEntity> Run(CommerceEntity arg, CommercePipelineExecutionContext context)
         {
             var importEntityArgument = context.CommerceContext.GetObject<ImportEntityArgument>();
-            if (importEntityArgument != null && importEntityArgument.SourceEntity != null)
+            if (importEntityArgument?.SourceEntity != null)
             {
                 var catalogImportPolicy = context.CommerceContext.GetPolicy<CatalogImportPolicy>();
-                if (!importEntityArgument.IsNew)
-                {
-                    this.SetCommerceEntityDetails(arg, importEntityArgument, catalogImportPolicy, context);
-                }
 
+                this.SetCommerceEntityDetails(arg, importEntityArgument, catalogImportPolicy, context);
                 this.SetCommerceEntityComponents(arg, importEntityArgument, catalogImportPolicy, context);
                 this.SetSellableItemVariantsComponents(arg, importEntityArgument, catalogImportPolicy, context);
             }
@@ -32,22 +29,32 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
 
         private void SetCommerceEntityDetails(CommerceEntity commerceEntity, ImportEntityArgument importEntityArgument, CatalogImportPolicy catalogImportPolicy, CommercePipelineExecutionContext context)
         {
-            catalogImportPolicy.Mappings.MapEntity(
-                commerceEntity, 
-                importEntityArgument.SourceEntity, 
-                context);
+            if (!importEntityArgument.IsNew)
+            {
+                if (importEntityArgument.ImportHandler is IEntityMapper mapper)
+                {
+                    mapper.Map();
+                }
+                else
+                {
+                    catalogImportPolicy.Mappings.MapEntity(
+                        commerceEntity,
+                        importEntityArgument.SourceEntity,
+                        context);
+                }
+            }
         }
 
         private void SetCommerceEntityComponents(CommerceEntity commerceEntity, ImportEntityArgument importEntityArgument, CatalogImportPolicy catalogImportPolicy, CommercePipelineExecutionContext context)
         {
             if (importEntityArgument.SourceEntityDetail.Components != null && importEntityArgument.SourceEntityDetail.Components.Any())
             {
-                foreach (var productLevel in importEntityArgument.SourceEntityDetail.Components)
+                foreach (var componentName in importEntityArgument.SourceEntityDetail.Components)
                 {
                     catalogImportPolicy.Mappings.MapEntityChildComponent(
-                        commerceEntity, 
-                        importEntityArgument.SourceEntity, 
-                        productLevel, 
+                        commerceEntity,
+                        importEntityArgument.SourceEntity,
+                        componentName,
                         context);
                 }
             }

@@ -1,5 +1,4 @@
 ﻿using Plugin.Accelerator.CatalogImport.Framework.Abstractions;
-using Plugin.Accelerator.CatalogImport.Framework.ImportHandlers;
 using Plugin.Accelerator.CatalogImport.Framework.Model;
 using Plugin.Accelerator.CatalogImport.Framework.Pipelines.Arguments;
 using Sitecore.Commerce.Core;
@@ -19,7 +18,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Policy
 
         public IList<MapperType> ItemVariantionComponentMappings { get; set; }
 
-        public IImportHandler ImportHandler(ImportEntityArgument importEntityArgument)
+        public IEntityImportHandler GetImportHandlerInstance(ImportEntityArgument importEntityArgument, CommercePipelineExecutionContext context)
         {
             var handlerType = this
                 .EntityMappings
@@ -34,8 +33,8 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Policy
                     throw new InvalidOperationException("Entity mapper type cannot be null.");
                 }
 
-                if (Activator.CreateInstance(t, importEntityArgument.SourceEntityDetail.SerializedEntity) is
-                    IImportHandler handler)
+                if (Activator.CreateInstance(t, importEntityArgument.SourceEntityDetail.SerializedEntity, context) is
+                    IEntityImportHandler handler)
                 {
                     return handler;
                 }

@@ -1,14 +1,21 @@
-﻿using Plugin.Accelerator.CatalogImport.Framework.Mappers;
+﻿using Plugin.Accelerator.CatalogImport.Framework.ImportHandlers;
 using Plugin.Accelerator.CatalogImport.Sample.Entity;
 using Sitecore.Commerce.Core;
 
-namespace Plugin.Accelerator.CatalogImport.Sample.EntityMappers
+namespace Plugin.Accelerator.CatalogImport.Sample.EntityImportHandlers
 {
-    public class SourceCategoryEntityMapper : BaseEntityMapper<SourceCategory, Sitecore.Commerce.Plugin.Catalog.Category>
+    public class SourceCategoryImportHandler : CategoryImportHandler<SourceCategory>
     {
-        public SourceCategoryEntityMapper(SourceCategory sourceCategory, Sitecore.Commerce.Plugin.Catalog.Category category, CommercePipelineExecutionContext context)
-            : base(sourceCategory, category, context)
+        public SourceCategoryImportHandler(string sourceCategory, CommercePipelineExecutionContext context)
+            : base(sourceCategory, context)
         {
+        }
+
+        protected override void Initialize()
+        {
+            this.Name = this.SourceEntity.Name;
+            this.DisplayName = this.SourceEntity.DisplayName;
+            this.Description = this.SourceEntity.Description;
         }
 
         public override void Map()

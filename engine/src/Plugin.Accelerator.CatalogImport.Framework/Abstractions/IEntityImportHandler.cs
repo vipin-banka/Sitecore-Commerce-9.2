@@ -1,21 +1,21 @@
 ﻿using Sitecore.Commerce.Core;
-using Sitecore.Commerce.Plugin.Catalog;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Newtonsoft.Json;
-using Plugin.Accelerator.CatalogImport.Framework.Abstractions;
 
-namespace Plugin.Accelerator.CatalogImport.Framework.ImportHandlers
+namespace Plugin.Accelerator.CatalogImport.Framework.Abstractions
 {
-    public interface IImportHandler
+    public interface IEntityImportHandler
     {
         string EntityId { get; }
 
         Task<CommerceEntity> Create(IServiceProvider serviceProvider, IDictionary<string, IList<string>> parents, CommercePipelineExecutionContext context);
 
         IEntity GetSourceEntity();
+
+        CommerceEntity GetCommerceEntity();
+
+        void SetCommerceEntity(CommerceEntity commerceEntity);
 
         IList<string> GetParentList();
 
@@ -30,5 +30,11 @@ namespace Plugin.Accelerator.CatalogImport.Framework.ImportHandlers
         bool HasVariants(ILanguageEntity languageEntity);
 
         IList<IEntity> GetVariants(ILanguageEntity languageEntity);
+    }
+
+    public interface IEntityImportHandler<TCommerceEntity>
+    where TCommerceEntity : CommerceEntity
+    {
+        TCommerceEntity CommerceEntity { get; set; }
     }
 }

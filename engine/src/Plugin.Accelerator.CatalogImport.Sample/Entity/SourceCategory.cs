@@ -4,7 +4,7 @@ using Plugin.Accelerator.CatalogImport.Framework.Metadata;
 
 namespace Plugin.Accelerator.CatalogImport.Sample.Entity
 {
-    public class SourceCategory : BaseEntity
+    public class SourceCategory : SourceBaseEntity
     {
         public SourceCategory()
         {

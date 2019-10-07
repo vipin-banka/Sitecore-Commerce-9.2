@@ -4,9 +4,9 @@ using Plugin.Accelerator.CatalogImport.Framework.Metadata;
 
 namespace Plugin.Accelerator.CatalogImport.Sample.Entity
 {
-    public class BaseEntity : IEntity
+    public class SourceBaseEntity : IEntity
     {
-        public BaseEntity()
+        public SourceBaseEntity()
         {
             this.Parents = new List<string>();
         }

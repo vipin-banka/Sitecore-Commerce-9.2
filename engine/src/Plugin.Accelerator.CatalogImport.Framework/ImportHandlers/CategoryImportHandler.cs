@@ -1,14 +1,14 @@
-﻿using Sitecore.Commerce.Core;
+﻿using Plugin.Accelerator.CatalogImport.Framework.Abstractions;
+using Sitecore.Commerce.Core;
 using Sitecore.Commerce.Plugin.Catalog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Plugin.Accelerator.CatalogImport.Framework.Abstractions;
 
 namespace Plugin.Accelerator.CatalogImport.Framework.ImportHandlers
 {
-    public abstract class CategoryImportHandler<TSourceEntity> : BaseImportHandler<TSourceEntity, Category>
+    public abstract class CategoryImportHandler<TSourceEntity> : BaseEntityImportHandler<TSourceEntity, Category>
         where TSourceEntity : IEntity
     {
         protected string CatalogId { get; set; }
@@ -19,8 +19,8 @@ namespace Plugin.Accelerator.CatalogImport.Framework.ImportHandlers
 
         protected string Description { get; set; }
 
-        public CategoryImportHandler(string sourceEntity)
-            : base(sourceEntity)
+        public CategoryImportHandler(string sourceEntity, CommercePipelineExecutionContext context)
+            : base(sourceEntity, context)
         {
         }
 
@@ -36,7 +36,8 @@ namespace Plugin.Accelerator.CatalogImport.Framework.ImportHandlers
             var command = serviceProvider.GetService(typeof(CreateCategoryCommand)) as CreateCategoryCommand;
             if (command == null)
                 throw new InvalidOperationException("Category cannot be created, CreateCategoryCommand not found.");
-            return await command.Process(context.CommerceContext, CatalogId, Name, DisplayName, Description);
+            this.CommerceEntity = await command.Process(context.CommerceContext, CatalogId, Name, DisplayName, Description);
+            return this.CommerceEntity;
         }
 
         public override bool HasVariants()

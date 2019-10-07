@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Plugin.Accelerator.CatalogImport.Framework.Model;
+﻿using Plugin.Accelerator.CatalogImport.Framework.Model;
+using System.Collections.Generic;
 
 namespace Plugin.Accelerator.CatalogImport.Framework.Abstractions
 {

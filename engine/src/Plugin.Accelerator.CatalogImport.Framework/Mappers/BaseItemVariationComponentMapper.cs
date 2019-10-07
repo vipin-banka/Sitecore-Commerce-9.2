@@ -1,7 +1,7 @@
-﻿using Sitecore.Commerce.Core;
+﻿using Plugin.Accelerator.CatalogImport.Framework.Abstractions;
+using Sitecore.Commerce.Core;
 using Sitecore.Commerce.Plugin.Catalog;
 using System.Globalization;
-using Plugin.Accelerator.CatalogImport.Framework.Abstractions;
 
 namespace Plugin.Accelerator.CatalogImport.Framework.Mappers
 {

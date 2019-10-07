@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Plugin.Accelerator.CatalogImport.Framework.Policy
+﻿namespace Plugin.Accelerator.CatalogImport.Framework.Policy
 {
     public class CatalogImportPolicy : Sitecore.Commerce.Core.Policy
     {

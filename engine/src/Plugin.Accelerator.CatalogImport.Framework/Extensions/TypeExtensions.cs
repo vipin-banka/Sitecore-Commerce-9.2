@@ -1,5 +1,4 @@
-﻿using Plugin.Accelerator.CatalogImport.Framework.Metadata;
-using System;
+﻿using System;
 using System.Linq;
 using System.Reflection;
 

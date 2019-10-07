@@ -3,7 +3,7 @@ using Plugin.Accelerator.CatalogImport.Framework.Mappers;
 using Plugin.Accelerator.CatalogImport.Sample.Entity;
 using Sitecore.Commerce.Core;
 
-namespace Plugin.Accelerator.CatalogImport.Sample.EntityComponentMappers
+namespace Plugin.Accelerator.CatalogImport.Sample.Mappers.EntityComponentMappers
 {
     public class ProductHierarchyRootComponentMapper : BaseEntityComponentMapper<SourceProduct, CommerceEntity, ProductHierarchyRootComponent>
     {

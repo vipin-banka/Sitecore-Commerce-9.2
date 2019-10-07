@@ -14,7 +14,6 @@ namespace Plugin.Accelerator.CatalogImport.Framework
             CommercePipelineExecutionContext context)
         {
             string entitySetName = "Commands";
-            //modelBuilder.AddComplexType(typeof(SourceEntityDetail));
 
             ActionConfiguration actionConfiguration = modelBuilder.Action("ImportEntity");
             actionConfiguration.Parameter<SourceEntityDetail>("sourceEntity");
