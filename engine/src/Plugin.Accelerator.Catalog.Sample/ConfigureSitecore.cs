@@ -1,4 +1,6 @@
-﻿using RegisteredPluginBlock = Plugin.Accelerator.Catalog.Sample.Pipelines.Blocks.RegisteredPluginBlock;
+﻿using Plugin.Accelerator.Catalog.Sample.EntityViews;
+using Sitecore.Commerce.EntityViews;
+using RegisteredPluginBlock = Plugin.Accelerator.Catalog.Sample.Pipelines.Blocks.RegisteredPluginBlock;
 
 namespace Plugin.Accelerator.Catalog.Sample
 {
@@ -20,7 +22,15 @@ namespace Plugin.Accelerator.Catalog.Sample
                 .ConfigurePipeline<IRunningPluginsPipeline>(c =>
                 {
                     c.Add<RegisteredPluginBlock>().After<RunningPluginsBlock>();
-                }));
+                })
+                .ConfigurePipeline<IGetEntityViewPipeline>(c =>
+                {
+                    c
+                    .Add<HardwareComponentViewBlock>()
+                    .Add<ProductHierarchyRootComponentViewBlock>()
+                    .Add<VariantComponentViewBlock>();
+                })
+            );
 
             services.RegisterAllCommands(assembly);
         }

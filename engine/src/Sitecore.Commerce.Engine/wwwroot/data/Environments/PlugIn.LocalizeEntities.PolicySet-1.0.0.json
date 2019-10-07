@@ -76,6 +76,26 @@
             ],
             "ActionView": "DisplayProperties",
             "IsItemComponent": true
+          },
+          {
+            "$type": "Sitecore.Commerce.Core.LocalizeEntityComponentPolicy, Sitecore.Commerce.Core",
+            "Path": "HardwareComponent",
+            "Properties": [
+              "Accessories",
+              "Dimensions"
+            ],
+            "ActionView": "HardwareComponentDetails",
+            "IsItemComponent": true
+          },
+          {
+            "$type": "Sitecore.Commerce.Core.LocalizeEntityComponentPolicy, Sitecore.Commerce.Core",
+            "Path": "ItemVariationsComponent.ItemVariationComponent.VariantComponent",
+            "Properties": [
+              "Color",
+              "Length"
+            ],
+            "ActionView": "VariantComponentDetails",
+            "IsItemComponent": true
           }
         ]
       },
