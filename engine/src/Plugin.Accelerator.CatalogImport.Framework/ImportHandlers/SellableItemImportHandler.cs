@@ -36,7 +36,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.ImportHandlers
             this.Tags = new List<string>();
         }
 
-        public override async Task<CommerceEntity> Create(IServiceProvider serviceProvider, IDictionary<string, IList<string>> parents, CommercePipelineExecutionContext context)
+        public override async Task<CommerceEntity> Create(IServiceProvider serviceProvider, CommercePipelineExecutionContext context)
         {
             this.Initialize();
             var command = serviceProvider.GetService(typeof(CreateSellableItemCommand)) as CreateSellableItemCommand;

@@ -59,6 +59,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
             if (parentList != null && parentList.Any())
             {
                 arg.Parents = await GetParentEntities(parentList, context).ConfigureAwait(false);
+                arg.ImportHandler.SetParentEntityIds(arg.Parents);
             }
 
             string entityId = importHandler.EntityId;
@@ -70,7 +71,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
             {
                 arg.IsNew = true;
                 // create new entity
-                entity = await importHandler.Create(this._serviceProvider, arg.Parents, context).ConfigureAwait(false);
+                entity = await importHandler.Create(this._serviceProvider, context).ConfigureAwait(false);
 
                 arg.CommerceEntity = entity;
             }

@@ -24,13 +24,25 @@ namespace Plugin.Accelerator.CatalogImport.Framework.ImportHandlers
         {
         }
 
-        public override async Task<CommerceEntity> Create(IServiceProvider serviceProvider, IDictionary<string, IList<string>> parents, CommercePipelineExecutionContext context)
+        protected override string Id
         {
-            if (parents != null && parents.Any())
+            get
             {
-                var firstParent = parents.FirstOrDefault();
-                this.CatalogId = firstParent.Key;
+                var firstParent = this.parentEntityIds.FirstOrDefault();
+                string catalogId = firstParent.Key.SimplifyEntityName();
+                return this.SourceEntity.Id.ToCategoryId(catalogId);
             }
+        }
+
+        public override async Task<CommerceEntity> Create(IServiceProvider serviceProvider, CommercePipelineExecutionContext context)
+        {
+            if (this.parentEntityIds == null || !this.parentEntityIds.Any())
+            {
+                throw new InvalidOperationException("Catalog must exist to create a new category.");
+            }
+
+            var firstParent = this.parentEntityIds.FirstOrDefault();
+            this.CatalogId = firstParent.Key;
 
             this.Initialize();
             var command = serviceProvider.GetService(typeof(CreateCategoryCommand)) as CreateCategoryCommand;
