@@ -51,7 +51,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Mappers
             return component;
         }
 
-        public virtual LocalizableComponentPropertiesValues Map(string language, LocalizableComponentPropertiesValues localizableComponentPropertiesValues)
+        public virtual LocalizableComponentPropertiesValues Map(ILanguageEntity languageEntity, LocalizableComponentPropertiesValues localizableComponentPropertiesValues)
         {
             Type t = typeof(T);
             if (t == null)
@@ -95,11 +95,11 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Mappers
                     {
                         var propertyValue = propertyInfo.GetValue(component);
                         var parameter = localizablePropertyValues.Parameters.FirstOrDefault(x =>
-                            x.Key.Equals(language, StringComparison.OrdinalIgnoreCase));
+                            x.Key.Equals(languageEntity.Language, StringComparison.OrdinalIgnoreCase));
 
                         if (parameter == null)
                         {
-                            parameter = new Parameter {Key = language, Value = null};
+                            parameter = new Parameter {Key = languageEntity.Language, Value = null};
                             localizablePropertyValues.Parameters.Add(parameter);
                         }
 

@@ -25,10 +25,10 @@ namespace Plugin.Accelerator.CatalogImport.Sample.EntityImportHandlers
             this.CommerceEntity.Description = this.SourceEntity.Description;
         }
 
-        protected override void MapLocalizeValues(Sitecore.Commerce.Plugin.Catalog.Category category)
+        protected override void MapLocalizeValues(SourceCategory sourceEntity, Sitecore.Commerce.Plugin.Catalog.Category targetEntity)
         {
-            category.DisplayName = this.SourceEntity.DisplayName;
-            category.Description = this.SourceEntity.Description;
+            targetEntity.DisplayName = sourceEntity.DisplayName;
+            targetEntity.Description = sourceEntity.Description;
         }
     }
 }

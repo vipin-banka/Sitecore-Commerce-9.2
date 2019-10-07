@@ -58,7 +58,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
             
             if (parentList != null && parentList.Any())
             {
-                arg.Parents = await GetParentEntities(importHandler.GetParentList(), context).ConfigureAwait(false);
+                arg.Parents = await GetParentEntities(parentList, context).ConfigureAwait(false);
             }
 
             string entityId = importHandler.EntityId;

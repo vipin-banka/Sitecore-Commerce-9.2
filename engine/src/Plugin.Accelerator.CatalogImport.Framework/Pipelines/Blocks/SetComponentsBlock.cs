@@ -1,4 +1,5 @@
-﻿using Plugin.Accelerator.CatalogImport.Framework.Pipelines.Arguments;
+﻿using System.Collections.Generic;
+using Plugin.Accelerator.CatalogImport.Framework.Pipelines.Arguments;
 using Plugin.Accelerator.CatalogImport.Framework.Policy;
 using Sitecore.Commerce.Core;
 using Sitecore.Commerce.Plugin.Catalog;
@@ -65,7 +66,16 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
             if (!(commerceEntity is SellableItem))
                 return;
 
-            if (importEntityArgument.ImportHandler.HasVariants())
+            var orphanVariants = new List<ItemVariationComponent>();
+            ItemVariationsComponent itemVariationsComponent = commerceEntity.GetComponent<ItemVariationsComponent>(); ;
+            var sourceEntityHasVariants = importEntityArgument.ImportHandler.HasVariants();
+            if (!sourceEntityHasVariants
+                && commerceEntity.HasComponent(typeof(ItemVariationsComponent)))
+            {
+                orphanVariants = itemVariationsComponent.Variations;
+            }
+
+            if (sourceEntityHasVariants)
             {
                 var variants = importEntityArgument.ImportHandler.GetVariants();
 
@@ -73,7 +83,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
                 {
                     var itemVariationComponent = catalogImportPolicy.Mappings.MapItemVariationComponent(
                         commerceEntity,
-                        commerceEntity.GetComponent<ItemVariationsComponent>(),
+                        itemVariationsComponent,
                         importEntityArgument.SourceEntity,
                         variant,
                         context);
@@ -94,13 +104,15 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
                     }
                 }
 
-                var itemVariationsComponent = commerceEntity.GetComponent<ItemVariationsComponent>();
+                orphanVariants = (from n in itemVariationsComponent.Variations
+                                  join o in variants on n.Id equals o.Id into p
+                                  where !p.Any()
+                                  select n).ToList();
+            }
 
-                var orphanVariants = (from n in itemVariationsComponent.Variations
-                                      join o in variants on n.Id equals o.Id into p
-                                      where !p.Any()
-                                      select n).ToList();
-
+            if (orphanVariants != null
+            && orphanVariants.Any())
+            {
                 foreach (var orphanVariant in orphanVariants)
                 {
                     if (catalogImportPolicy.DeleteOrphanVariant)

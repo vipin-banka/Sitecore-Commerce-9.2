@@ -18,7 +18,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Mappers
         }
 
         protected BaseEntityComponentMapper(TSourceEntity sourceEntity, IComponentHandler componentHandler, CommercePipelineExecutionContext context)
-            : base(null, context)
+            : base(componentHandler, context)
         {
             this.SourceEntity = sourceEntity;
         }

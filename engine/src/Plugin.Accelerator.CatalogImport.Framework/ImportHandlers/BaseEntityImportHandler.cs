@@ -119,15 +119,19 @@ namespace Plugin.Accelerator.CatalogImport.Framework.ImportHandlers
         {
         }
 
-        public virtual IList<LocalizablePropertyValues> Map(string language, IList<LocalizablePropertyValues> entityLocalizableProperties)
+        public virtual IList<LocalizablePropertyValues> Map(ILanguageEntity languageEntity, IList<LocalizablePropertyValues> entityLocalizableProperties)
         {
             Type t = typeof(TCommerceEntity);
             if (t == null)
                 throw new InvalidOperationException("Type cannot be null.");
 
-            var entity = Activator.CreateInstance(t) as TCommerceEntity;
+            var commerceEntity = Activator.CreateInstance(t) as TCommerceEntity;
 
-            this.MapLocalizeValues(entity);
+            ILanguageEntity<TSourceEntity> l = languageEntity as ILanguageEntity<TSourceEntity>;
+            if (l == null)
+                throw new InvalidOperationException("Language entity cannot be null.");
+
+            this.MapLocalizeValues(l.Entity,  commerceEntity);
 
             if (entityLocalizableProperties == null)
             {
@@ -152,13 +156,13 @@ namespace Plugin.Accelerator.CatalogImport.Framework.ImportHandlers
                         x.Name.Equals(localizablePropertyValues.PropertyName, StringComparison.OrdinalIgnoreCase));
                     if (propertyInfo != null)
                     {
-                        var propertyValue = propertyInfo.GetValue(entity);
+                        var propertyValue = propertyInfo.GetValue(commerceEntity);
                         var parameter = localizablePropertyValues.Parameters.FirstOrDefault(x =>
-                            x.Key.Equals(language, StringComparison.OrdinalIgnoreCase));
+                            x.Key.Equals(languageEntity.Language, StringComparison.OrdinalIgnoreCase));
 
                         if (parameter == null)
                         {
-                            parameter = new Parameter { Key = language, Value = null };
+                            parameter = new Parameter { Key = languageEntity.Language, Value = null };
                             localizablePropertyValues.Parameters.Add(parameter);
                         }
 
@@ -170,7 +174,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.ImportHandlers
             return entityLocalizableProperties;
         }
 
-        protected virtual void MapLocalizeValues(TCommerceEntity entity)
+        protected virtual void MapLocalizeValues(TSourceEntity sourceEntity, TCommerceEntity targetEntity)
         {
         }
     }

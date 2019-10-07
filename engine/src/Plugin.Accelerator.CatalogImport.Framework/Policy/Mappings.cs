@@ -65,7 +65,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Policy
             }
         }
 
-        public IList<LocalizablePropertyValues> GetEntityLocalizableProperties(object sourceEntity, Type entityType, string language, IList<LocalizablePropertyValues> entityLocalizableProperties, CommercePipelineExecutionContext context)
+        public IList<LocalizablePropertyValues> GetEntityLocalizableProperties(object sourceEntity, Type entityType, ILanguageEntity languageEntity, IList<LocalizablePropertyValues> entityLocalizableProperties, CommercePipelineExecutionContext context)
         {
             var mapperType = this
                 .EntityMappings
@@ -82,7 +82,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Policy
 
                 if (Activator.CreateInstance(t, sourceEntity, context) is IEntityLocalizationMapper mapper)
                 {
-                   return mapper.Map(language, entityLocalizableProperties);
+                   return mapper.Map(languageEntity, entityLocalizableProperties);
                 }
             }
 
@@ -114,7 +114,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Policy
             return null;
         }
 
-        public LocalizableComponentPropertiesValues GetEntityComponentLocalizableProperties(CommerceEntity targetEntity, Component component, object sourceEntity, string language, IList<LocalizableComponentPropertiesValues> componentPropertiesList, CommercePipelineExecutionContext context)
+        public LocalizableComponentPropertiesValues GetEntityComponentLocalizableProperties(CommerceEntity targetEntity, Component component, object sourceEntity, ILanguageEntity languageEntity, IList<LocalizableComponentPropertiesValues> componentPropertiesList, CommercePipelineExecutionContext context)
         {
             var mapperType = this
                 .EntityComponentMappings
@@ -134,7 +134,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Policy
                     var componentProperties = componentPropertiesList.FirstOrDefault(x =>
                         component.Id.Equals(x.Id, StringComparison.OrdinalIgnoreCase));
 
-                    componentProperties = mapper.Map(language, componentProperties);
+                    componentProperties = mapper.Map(languageEntity, componentProperties);
                     if (componentProperties != null)
                     {
                         componentProperties.Id = component.Id;
@@ -174,7 +174,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Policy
             return null;
         }
 
-        public LocalizableComponentPropertiesValues GetItemVariantComponentLocalizableProperties(CommerceEntity targetEntity, Component component, object sourceEntity, object sourceVariant, string language, IList<LocalizableComponentPropertiesValues> componentPropertiesList, CommercePipelineExecutionContext context)
+        public LocalizableComponentPropertiesValues GetItemVariantComponentLocalizableProperties(CommerceEntity targetEntity, Component component, object sourceEntity, object sourceVariant, ILanguageEntity languageEntity, IList<LocalizableComponentPropertiesValues> componentPropertiesList, CommercePipelineExecutionContext context)
         {
             var mapperType = this
                 .ItemVariantionMappings
@@ -194,7 +194,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Policy
                     var componentProperties = componentPropertiesList.FirstOrDefault(x =>
                         component.Id.Equals(x.Id, StringComparison.OrdinalIgnoreCase));
 
-                    componentProperties = mapper.Map(language, componentProperties);
+                    componentProperties = mapper.Map(languageEntity, componentProperties);
                     if (componentProperties != null)
                     {
                         componentProperties.Id = component.Id;
@@ -234,7 +234,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Policy
             return null;
         }
 
-        public LocalizableComponentPropertiesValues GetVariantComponentsLocalizableProperties(CommerceEntity targetEntity, Component component, object sourceEntity, object sourceVariant, string language, IList<LocalizableComponentPropertiesValues> componentPropertiesList, CommercePipelineExecutionContext context)
+        public LocalizableComponentPropertiesValues GetVariantComponentsLocalizableProperties(CommerceEntity targetEntity, Component component, object sourceEntity, object sourceVariant, ILanguageEntity languageEntity, IList<LocalizableComponentPropertiesValues> componentPropertiesList, CommercePipelineExecutionContext context)
         {
             var mapperType = this
                 .ItemVariantionComponentMappings
@@ -254,7 +254,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Policy
                     var componentProperties = componentPropertiesList.FirstOrDefault(x =>
                         component.Id.Equals(x.Id, StringComparison.OrdinalIgnoreCase));
 
-                    componentProperties = mapper.Map(language, componentProperties);
+                    componentProperties = mapper.Map(languageEntity, componentProperties);
                     if (componentProperties != null)
                     {
                         componentProperties.Id = component.Id;

@@ -28,7 +28,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
                 {
                     if (arg.ImportHandler is IEntityLocalizationMapper mapper)
                     {
-                        entityLocalizableProperties = mapper.Map(language.Language, entityLocalizableProperties);
+                        entityLocalizableProperties = mapper.Map(language, entityLocalizableProperties);
                     }
                     else
                     {
@@ -37,7 +37,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
                             .GetEntityLocalizableProperties(
                                 language.GetEntity(),
                                 arg.CommerceEntity.GetType(),
-                                language.Language,
+                                language,
                                 entityLocalizableProperties,
                                 context);
                     }
@@ -53,7 +53,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
                                 arg.CommerceEntity,
                                 commerceEntityComponent,
                                 language.GetEntity(),
-                                language.Language,
+                                language,
                                 componentsPropertiesList,
                                 context);
                     }
@@ -75,7 +75,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
                             itemVariationComponent,
                             language.GetEntity(),
                             variant,
-                            language.Language,
+                            language,
                             componentsPropertiesList,
                             context);
 
@@ -89,7 +89,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
                                     component,
                                     language.GetEntity(),
                                     variant,
-                                    language.Language,
+                                    language,
                                     componentsPropertiesList,
                                     context);
                             }

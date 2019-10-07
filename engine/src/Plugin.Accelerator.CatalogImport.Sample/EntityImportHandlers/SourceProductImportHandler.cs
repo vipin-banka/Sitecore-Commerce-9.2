@@ -34,10 +34,10 @@ namespace Plugin.Accelerator.CatalogImport.Sample.EntityImportHandlers
             this.CommerceEntity.Description = this.SourceEntity.Description;
         }
 
-        protected override void MapLocalizeValues(SellableItem sellableItem)
+        protected override void MapLocalizeValues(SourceProduct sourceEntity, SellableItem targetEntity)
         {
-            sellableItem.DisplayName = this.SourceEntity.DisplayName;
-            sellableItem.Description = this.SourceEntity.Description;
+            targetEntity.DisplayName = sourceEntity.DisplayName;
+            targetEntity.Description = sourceEntity.Description;
         }
 
         public override bool HasVariants(ILanguageEntity languageEntity)
@@ -47,7 +47,7 @@ namespace Plugin.Accelerator.CatalogImport.Sample.EntityImportHandlers
             if (matchedLanguage != null)
             {
                 return matchedLanguage.Entity.Variants != null 
-                       && !matchedLanguage.Entity.Variants.Any();
+                       && matchedLanguage.Entity.Variants.Any();
             }
 
             return false;

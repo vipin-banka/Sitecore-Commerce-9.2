@@ -59,7 +59,7 @@
             {
               "$type": "Plugin.Accelerator.CatalogImport.Framework.Policy.MapperType, Plugin.Accelerator.CatalogImport.Framework",
               "Key": "Variant",
-              "Type": "Plugin.Accelerator.Catalog.Components.VariantComponent",
+              "Type": "Plugin.Accelerator.Catalog.Sample.Components.VariantComponent",
               "FullTypeName": "Plugin.Accelerator.CatalogImport.Sample.Mappers.VariantComponentMappers.VariantComponentMapper, Plugin.Accelerator.CatalogImport.Sample"
             }
           ]

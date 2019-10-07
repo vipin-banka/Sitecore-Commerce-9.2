@@ -5,6 +5,6 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Abstractions
 {
     public interface IEntityLocalizationMapper
     {
-        IList<LocalizablePropertyValues> Map(string language, IList<LocalizablePropertyValues> entityLocalizableProperties);
+        IList<LocalizablePropertyValues> Map(ILanguageEntity languageEntity, IList<LocalizablePropertyValues> entityLocalizableProperties);
     }
 }

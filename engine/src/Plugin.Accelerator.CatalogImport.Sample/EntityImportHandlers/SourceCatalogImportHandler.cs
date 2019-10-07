@@ -23,9 +23,9 @@ namespace Plugin.Accelerator.CatalogImport.Sample.EntityImportHandlers
             this.CommerceEntity.DisplayName = this.SourceEntity.DisplayName;
         }
 
-        protected override void MapLocalizeValues(Sitecore.Commerce.Plugin.Catalog.Catalog catalog)
+        protected override void MapLocalizeValues(SourceCatalog sourceEntity, Sitecore.Commerce.Plugin.Catalog.Catalog targetEntity)
         {
-            catalog.DisplayName = this.SourceEntity.DisplayName;
+            targetEntity.DisplayName = sourceEntity.DisplayName;
         }
     }
 }
