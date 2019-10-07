@@ -33,15 +33,5 @@ namespace Plugin.Accelerator.CatalogImport.Framework.ImportHandlers
         {
             return new List<string>();
         }
-
-        public override bool HasVariants()
-        {
-            return false;
-        }
-
-        public override IList<IEntity> GetVariants()
-        {
-            return new List<IEntity>();
-        }
     }
 }

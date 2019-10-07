@@ -39,15 +39,5 @@ namespace Plugin.Accelerator.CatalogImport.Framework.ImportHandlers
             this.CommerceEntity = await command.Process(context.CommerceContext, CatalogId, Name, DisplayName, Description);
             return this.CommerceEntity;
         }
-
-        public override bool HasVariants()
-        {
-            return false;
-        }
-
-        public override IList<IEntity> GetVariants()
-        {
-            return new List<IEntity>();
-        }
     }
 }

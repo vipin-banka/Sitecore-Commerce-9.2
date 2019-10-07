@@ -87,7 +87,6 @@ namespace Plugin.Accelerator.CatalogImport.Framework.ImportHandlers
             return new List<ILanguageEntity>();
         }
 
-
         public virtual bool HasVariants()
         {
             return false;
