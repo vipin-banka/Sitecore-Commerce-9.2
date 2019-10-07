@@ -70,24 +70,6 @@ namespace Plugin.Accelerator.CatalogImport.Framework.ImportHandlers
             return typeof(TSourceEntity).GetPropertyValueWithAttribute<ParentsAttribute, IList<string>>(this.SourceEntity);
         }
 
-        public virtual bool HasVariants()
-        {
-            var variants = typeof(TSourceEntity).GetPropertyValueWithAttribute<VariantsAttribute, IEnumerable>(this.SourceEntity);
-            return variants != null && variants.GetEnumerator().MoveNext();
-        }
-
-        public virtual IList<IEntity> GetVariants()
-        {
-            var variants = typeof(TSourceEntity).GetPropertyValueWithAttribute<VariantsAttribute, IEnumerable>(this.SourceEntity);
-
-            if (variants != null)
-            {
-                return variants.Cast<IEntity>().ToList();
-            }
-
-            return new List<IEntity>();
-        }
-
         public virtual bool HasLanguages()
         {
             var languages = typeof(TSourceEntity).GetPropertyValueWithAttribute<LanguagesAttribute, IEnumerable>(this.SourceEntity);
@@ -103,6 +85,29 @@ namespace Plugin.Accelerator.CatalogImport.Framework.ImportHandlers
             }
 
             return new List<ILanguageEntity>();
+        }
+
+
+        public virtual bool HasVariants()
+        {
+            return false;
+        }
+
+        public virtual IList<IEntity> GetVariants()
+        {
+            return new List<IEntity>();
+        }
+
+        protected IList<IEntity> GetVariants(object instance)
+        {
+            var variants = typeof(TSourceEntity).GetPropertyValueWithAttribute<VariantsAttribute, IEnumerable>(instance);
+
+            if (variants != null)
+            {
+                return variants.Cast<IEntity>().ToList();
+            }
+
+            return new List<IEntity>();
         }
 
         public virtual bool HasVariants(ILanguageEntity languageEntity)
@@ -131,7 +136,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.ImportHandlers
             if (l == null)
                 throw new InvalidOperationException("Language entity cannot be null.");
 
-            this.MapLocalizeValues(l.Entity,  commerceEntity);
+            this.MapLocalizeValues(l.Entity, commerceEntity);
 
             if (entityLocalizableProperties == null)
             {

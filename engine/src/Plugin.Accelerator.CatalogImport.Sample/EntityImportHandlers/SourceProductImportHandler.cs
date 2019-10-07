@@ -39,30 +39,5 @@ namespace Plugin.Accelerator.CatalogImport.Sample.EntityImportHandlers
             targetEntity.DisplayName = sourceEntity.DisplayName;
             targetEntity.Description = sourceEntity.Description;
         }
-
-        public override bool HasVariants(ILanguageEntity languageEntity)
-        {
-            var matchedLanguage = this.SourceEntity.Languages.FirstOrDefault(x =>
-                x.Language.Equals(languageEntity.Language, StringComparison.OrdinalIgnoreCase));
-            if (matchedLanguage != null)
-            {
-                return matchedLanguage.Entity.Variants != null 
-                       && matchedLanguage.Entity.Variants.Any();
-            }
-
-            return false;
-        }
-
-        public override IList<IEntity> GetVariants(ILanguageEntity languageEntity)
-        {
-            var matchedLanguage = this.SourceEntity.Languages.FirstOrDefault(x =>
-                x.Language.Equals(languageEntity.Language, StringComparison.OrdinalIgnoreCase));
-            if (matchedLanguage != null)
-            {
-                return matchedLanguage.Entity.Variants.Select(x => x as IEntity).ToList();
-            }
-
-            return new List<IEntity>();
-        }
     }
 }
