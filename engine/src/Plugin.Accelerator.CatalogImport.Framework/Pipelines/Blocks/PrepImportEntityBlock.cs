@@ -9,7 +9,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
     [PipelineDisplayName(Constants.PrepImportEntityBlock)]
     public class PrepImportEntityBlock : PipelineBlock<ImportEntityArgument, ImportEntityArgument, CommercePipelineExecutionContext>
     {
-        public override Task<ImportEntityArgument> Run(ImportEntityArgument arg, CommercePipelineExecutionContext context)
+        public override async Task<ImportEntityArgument> Run(ImportEntityArgument arg, CommercePipelineExecutionContext context)
         {
             context.CommerceContext.AddUniqueObject(arg);
 
@@ -17,12 +17,12 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
 
             if (catalogImportPolicy == null)
             {
-                context.Abort("Catalog import policy not found.", context);
+                context.Abort(await context.CommerceContext.AddMessage(context.GetPolicy<KnownResultCodes>().Error, "CatalogImportPolicyMissing", null, $"Catalog import policy missing."), context);
             }
 
             arg.CatalogImportPolicy = catalogImportPolicy;
 
-            return Task.FromResult(arg);
+            return arg;
         }
     }
 }

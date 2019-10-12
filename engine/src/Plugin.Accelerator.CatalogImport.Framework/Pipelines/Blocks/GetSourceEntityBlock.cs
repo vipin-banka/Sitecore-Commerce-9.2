@@ -28,7 +28,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
             arg.SourceEntity = arg.ImportHandler.GetSourceEntity();
             if (arg.SourceEntity == null)
             {
-                context.Abort("Source entity not received.", context);
+                context.Abort(await context.CommerceContext.AddMessage(context.GetPolicy<KnownResultCodes>().Error, "SourceEntityMissing", null, $"Source entity missing for entityType={arg.SourceEntityDetail.EntityType}."), context);
             }
 
             var parentList = arg.ImportHandler.GetParentList();

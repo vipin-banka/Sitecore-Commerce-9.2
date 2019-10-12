@@ -29,11 +29,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Policy
             {
                 var t = Type.GetType(handlerType.ImportHandlerTypeName);
 
-                if (t == null)
-                {
-                    context.Abort($"Entity mapper type cannot be null. EntityType={importEntityArgument.SourceEntityDetail.EntityType}", context);
-                }
-                else
+                if (t != null)
                 {
                     if (Activator.CreateInstance(t, importEntityArgument.SourceEntityDetail.SerializedEntity,
                             commerceCommander, context) is
@@ -57,11 +53,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Policy
             {
                 var t = Type.GetType(mapperType.FullTypeName ?? mapperType.ImportHandlerTypeName);
 
-                if (t == null)
-                {
-                    context.Abort($"Entity mapper type cannot be null. EntityType={importEntityArgument.SourceEntityDetail.EntityType}", context);
-                }
-                else
+                if (t != null)
                 {
                     if (Activator.CreateInstance(t, importEntityArgument.SourceEntity, targetEntity, commerceCommander,
                         context) is IEntityMapper mapper)
@@ -84,11 +76,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Policy
             {
                 var t = Type.GetType(mapperType.ImportHandlerTypeName ?? mapperType.FullTypeName ?? mapperType.LocalizationFullTypeName);
 
-                if (t == null)
-                {
-                    context.Abort($"Entity localization mapper type cannot be null. EntityType={importEntityArgument.SourceEntityDetail.EntityType}", context);
-                }
-                else
+                if (t != null)
                 {
                     if (Activator.CreateInstance(t, languageEntity.GetEntity(), commerceCommander, context) is
                         IEntityLocalizationMapper mapper)
@@ -111,11 +99,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Policy
             {
                 var t = Type.GetType(mapperType.FullTypeName);
 
-                if (t == null)
-                {
-                    context.Abort($"Component mapper type cannot be null. ComponentMappingKey={componentMappingKey}", context);
-                }
-                else
+                if (t != null)
                 {
                     if (Activator.CreateInstance(t, importEntityArgument.SourceEntity, targetEntity, commerceCommander, context) is
                         IComponentMapper mapper)
@@ -141,11 +125,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Policy
             {
                 var t = Type.GetType(mapperType.LocalizationFullTypeName ?? mapperType.FullTypeName);
 
-                if (t == null)
-                {
-                    context.Abort($"Component localization mapper type cannot be null. ComponentName={component.GetType().FullName}", context);
-                }
-                else
+                if (t != null)
                 {
                     if (Activator.CreateInstance(t, languageEntity.GetEntity(), targetEntity, commerceCommander, context) is
                         IComponentLocalizationMapper mapper)
@@ -168,11 +148,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Policy
             {
                 var t = Type.GetType(mapperType.FullTypeName);
 
-                if (t == null)
-                {
-                    context.Abort($"Component mapper type cannot be null. ParentComponentType={parentComponent.GetType().FullName}", context);
-                }
-                else
+                if (t != null)
                 {
                     if (Activator.CreateInstance(t, importEntityArgument.SourceEntity, sourceComponent, targetEntity, parentComponent,
                         commerceCommander, context) is IComponentMapper mapper)
@@ -195,11 +171,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Policy
             {
                 var t = Type.GetType(mapperType.LocalizationFullTypeName ?? mapperType.FullTypeName);
 
-                if (t == null)
-                {
-                    context.Abort("Component localization mapper type cannot be null.", context);
-                }
-                else
+                if (t != null)
                 {
                     if (Activator.CreateInstance(t, languageEntity.GetEntity(), sourceVariant, targetEntity, component, commerceCommander, context) is IComponentLocalizationMapper mapper)
                     {
@@ -221,11 +193,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Policy
             {
                 var t = Type.GetType(mapperType.FullTypeName);
 
-                if (t == null)
-                {
-                    context.Abort($"Component mapper type cannot be null. ChildComponentMappingKey={childComponentMappingKey}", context);
-                }
-                else
+                if (t != null)
                 {
                     if (Activator.CreateInstance(t, importEntityArgument.SourceEntity, sourceComponent, targetEntity,
                         parentComponent, commerceCommander, context) is IComponentMapper mapper)
@@ -251,11 +219,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Policy
             {
                 var t = Type.GetType(mapperType.LocalizationFullTypeName ?? mapperType.FullTypeName);
 
-                if (t == null)
-                {
-                    context.Abort("Component localization mapper type cannot be null.", context);
-                }
-                else
+                if (t != null)
                 {
                     if (Activator.CreateInstance(t, languageEntity.GetEntity(), sourceVariant, targetEntity, component,
                         commerceCommander, context) is IComponentLocalizationMapper mapper)

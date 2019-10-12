@@ -24,7 +24,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
 
             if (importHandler == null)
             {
-                context.Abort("Import handler instance not resolved.", context);
+                context.Abort( await context.CommerceContext.AddMessage(context.GetPolicy<KnownResultCodes>().Error, "ImportHandlerMissing", null, $"Import handler instance for entityType={arg.SourceEntityDetail.EntityType} not resolved."), context);
             }
 
             arg.ImportHandler = importHandler;

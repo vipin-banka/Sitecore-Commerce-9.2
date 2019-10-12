@@ -68,10 +68,20 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
                     .Pipeline<IResolveComponentLocalizationMapperPipeline>()
                     .Run(new ResolveComponentLocalizationMapperArgument(arg.ImportEntityArgument, arg.CommerceEntity,
                             itemVariationComponent, language, variant), context).ConfigureAwait(false);
-                itemVariantComponentLocalizationMapper.Execute(componentsPropertiesList, itemVariationComponent,
-                    language);
 
-                await PerformEntityVariantLocalization(arg, context, language, componentsPropertiesList, itemVariationComponent, variant).ConfigureAwait(false);
+                if (itemVariantComponentLocalizationMapper != null)
+                {
+
+                    itemVariantComponentLocalizationMapper.Execute(componentsPropertiesList, itemVariationComponent,
+                        language);
+
+                    await PerformEntityVariantLocalization(arg, context, language, componentsPropertiesList,
+                        itemVariationComponent, variant).ConfigureAwait(false);
+                }
+                else
+                {
+                    await context.CommerceContext.AddMessage(context.GetPolicy<KnownResultCodes>().Warning, "ItemVariantComponentLocalizationMapperMissing", null, $"Item variant component localization mapper instance for not resolved.");
+                }
             }
         }
 
@@ -89,7 +99,14 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
                             ResolveComponentLocalizationMapperArgument(arg.ImportEntityArgument, arg.CommerceEntity,
                                 component, language, variant), context).ConfigureAwait(false);
 
-                    mapper.Execute(componentsPropertiesList, component, language);
+                    if (mapper != null)
+                    {
+                        mapper.Execute(componentsPropertiesList, component, language);
+                    }
+                    else
+                    {
+                        await context.CommerceContext.AddMessage(context.GetPolicy<KnownResultCodes>().Warning, "ComponentChildComponentLocalizationMapperMissing", null, $"Component's child component localization mapper missing for componentType={component.GetType().FullName} (key={component.GetComponentMetadataPolicy().MapperKey}) not resolved.");
+                    }
                 }
             }
         }
@@ -106,8 +123,15 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
                             arg.CommerceEntity, commerceEntityComponent, language), context)
                     .ConfigureAwait(false);
 
-                entityComponentLocalizationMapper.Execute(componentsPropertiesList, commerceEntityComponent,
-                    language);
+                if (entityComponentLocalizationMapper != null)
+                {
+                    entityComponentLocalizationMapper.Execute(componentsPropertiesList, commerceEntityComponent,
+                        language);
+                }
+                else
+                {
+                    await context.CommerceContext.AddMessage(context.GetPolicy<KnownResultCodes>().Warning, "EntityComponentLocalizationMapperMissing", null, $"Entity component localization mapper instance for componentType={commerceEntityComponent.GetType().FullName} (key={commerceEntityComponent.GetComponentMetadataPolicy().MapperKey}) not resolved.");
+                }
             }
         }
 
@@ -128,6 +152,10 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
                 if (entityLocalizationMapper != null)
                 {
                     entityLocalizableProperties = entityLocalizationMapper.Map(language, entityLocalizableProperties);
+                }
+                else
+                {
+                    await context.CommerceContext.AddMessage(context.GetPolicy<KnownResultCodes>().Warning, "EntityLocalizationMapperMissing", null, $"Entity Localization Mapper instance for entityType={arg.ImportEntityArgument.SourceEntityDetail.EntityType} not resolved.");
                 }
             }
 

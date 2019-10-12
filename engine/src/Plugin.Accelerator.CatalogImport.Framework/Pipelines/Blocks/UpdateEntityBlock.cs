@@ -43,12 +43,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
 
                     if (mapper == null)
                     {
-                        var message = new CommandMessage
-                        {
-                            Text =
-                                $"Entity mapper not found for {importEntityArgument.SourceEntityDetail.EntityType}."
-                        };
-                        context.CommerceContext.AddMessage(message);
+                        await context.CommerceContext.AddMessage(context.GetPolicy<KnownResultCodes>().Warning, "EntityMapperMissing", null, $"Entity mapper instance for entityType={importEntityArgument.SourceEntityDetail.EntityType} not resolved.");
                     }
                     else
                     {

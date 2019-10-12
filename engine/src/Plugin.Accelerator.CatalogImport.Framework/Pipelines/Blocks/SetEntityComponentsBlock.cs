@@ -1,10 +1,9 @@
-﻿using Plugin.Accelerator.CatalogImport.Framework.Pipelines.Arguments;
+﻿using Plugin.Accelerator.CatalogImport.Framework.Extensions;
+using Plugin.Accelerator.CatalogImport.Framework.Pipelines.Arguments;
 using Sitecore.Commerce.Core;
 using Sitecore.Framework.Pipelines;
 using System.Linq;
 using System.Threading.Tasks;
-using Plugin.Accelerator.CatalogImport.Framework.Extensions;
-using Plugin.Accelerator.CatalogImport.Framework.Model;
 
 namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
 {
@@ -41,12 +40,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
 
                     if (mapper == null)
                     {
-                        var message = new CommandMessage
-                        {
-                            Text =
-                                $"Component mapper not found for {componentName}."
-                        };
-                        context.CommerceContext.AddMessage(message);
+                        await context.CommerceContext.AddMessage(context.GetPolicy<KnownResultCodes>().Warning, "EntityComponentMapperMissing", null, $"Entity component mapper instance for entityType={importEntityArgument.SourceEntityDetail.EntityType} and component={componentName} not resolved.");
                     }
                     else
                     {

@@ -32,7 +32,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
             return arg;
         }
 
-        private async Task ImportVariants(CommerceEntity commerceEntity, ImportEntityArgument importEntityArgument,  CommercePipelineExecutionContext context)
+        private async Task ImportVariants(CommerceEntity commerceEntity, ImportEntityArgument importEntityArgument, CommercePipelineExecutionContext context)
         {
             var orphanVariants = new List<ItemVariationComponent>();
             ItemVariationsComponent itemVariationsComponent = null;
@@ -62,7 +62,13 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
                             new ResolveComponentMapperArgument(importEntityArgument, commerceEntity,
                                 itemVariationsComponent, variant, string.Empty), context).ConfigureAwait(false);
 
-                                        var action = itemVariantMapper.GetComponentAction();
+                    if (itemVariantMapper == null)
+                    {
+                        await context.CommerceContext.AddMessage(context.GetPolicy<KnownResultCodes>().Warning, "ItemVariantionMapperMissing", null, $"Item variation mapper instance for variantId={variant.Id} not resolved.");
+                        continue;
+                    }
+
+                    var action = itemVariantMapper.GetComponentAction();
                     Component itemVariationComponent = itemVariantMapper.Execute(action);
 
                     if (action != ComponentAction.Remove
@@ -77,8 +83,15 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
                                         itemVariationComponent, variant, variantComponentName), context)
                                 .ConfigureAwait(false);
 
-                            var childComponent = itemVariantChildComponentMapper.Execute();
-                            childComponent.SetComponentMetadataPolicy(variantComponentName);
+                            if (itemVariantChildComponentMapper != null)
+                            {
+                                var childComponent = itemVariantChildComponentMapper.Execute();
+                                childComponent.SetComponentMetadataPolicy(variantComponentName);
+                            }
+                            else
+                            {
+                                await context.CommerceContext.AddMessage(context.GetPolicy<KnownResultCodes>().Warning, "ComponentChildComponentMapperMissing", null, $"Component's child component mapper instance for entityType={importEntityArgument.SourceEntityDetail.EntityType} and key={variantComponentName} not resolved.");
+                            }
                         }
                     }
                 }
