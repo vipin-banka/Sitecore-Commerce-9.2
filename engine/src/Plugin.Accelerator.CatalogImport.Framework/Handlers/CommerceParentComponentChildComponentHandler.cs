@@ -4,11 +4,11 @@ using System.Linq;
 
 namespace Plugin.Accelerator.CatalogImport.Framework.Handlers
 {
-    public class ItemVariationComponentChildComponentHandler : CommerceEntityComponentHandler
+    public class CommerceParentComponentChildComponentHandler : CommerceEntityComponentHandler
     {
         public Component ParentComponent { get; }
 
-        public ItemVariationComponentChildComponentHandler(CommerceEntity commerceEntity, Component parentComponent) : base(commerceEntity)
+        public CommerceParentComponentChildComponentHandler(CommerceEntity commerceEntity, Component parentComponent) : base(commerceEntity)
         {
             this.ParentComponent = parentComponent;
         }
@@ -40,9 +40,15 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Handlers
             return existingComponent;
         }
 
-        public override string GetParentTypeName()
+        public override Component RemoveComponent<T>()
         {
-            return this.ParentComponent.GetType().Name;
+            var component = this.GetComponent(typeof(T));
+            if (component != null)
+            {
+                this.ParentComponent.RemoveComponent(typeof(T));
+            }
+
+            return component;
         }
     }
 }

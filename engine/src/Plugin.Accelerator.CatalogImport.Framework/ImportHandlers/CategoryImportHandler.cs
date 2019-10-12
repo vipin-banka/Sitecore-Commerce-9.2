@@ -19,8 +19,8 @@ namespace Plugin.Accelerator.CatalogImport.Framework.ImportHandlers
 
         protected string Description { get; set; }
 
-        public CategoryImportHandler(string sourceEntity, CommercePipelineExecutionContext context)
-            : base(sourceEntity, context)
+        public CategoryImportHandler(string sourceEntity, CommerceCommander commerceCommander, CommercePipelineExecutionContext context)
+            : base(sourceEntity, commerceCommander, context)
         {
         }
 
@@ -34,21 +34,19 @@ namespace Plugin.Accelerator.CatalogImport.Framework.ImportHandlers
             }
         }
 
-        public override async Task<CommerceEntity> Create(IServiceProvider serviceProvider, CommercePipelineExecutionContext context)
+        public override async Task<CommerceEntity> Create()
         {
             if (this.ParentEntityIds == null || !this.ParentEntityIds.Any())
             {
-                throw new InvalidOperationException("Catalog must exist to create a new category.");
+                this.Context.Abort("Catalog must exist to create a new category.", this.Context);
             }
 
             var firstParent = this.ParentEntityIds.FirstOrDefault();
             this.CatalogId = firstParent.Key;
 
             this.Initialize();
-            var command = serviceProvider.GetService(typeof(CreateCategoryCommand)) as CreateCategoryCommand;
-            if (command == null)
-                throw new InvalidOperationException("Category cannot be created, CreateCategoryCommand not found.");
-            this.CommerceEntity = await command.Process(context.CommerceContext, CatalogId, Name, DisplayName, Description);
+            var command = this.CommerceCommander.Command<CreateCategoryCommand>();
+            this.CommerceEntity = await command.Process(this.Context.CommerceContext, CatalogId, Name, DisplayName, Description);
             return this.CommerceEntity;
         }
     }

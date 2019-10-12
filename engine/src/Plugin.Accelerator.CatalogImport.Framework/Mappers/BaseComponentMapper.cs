@@ -12,21 +12,22 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Mappers
     {
         public IComponentHandler ComponentHandler { get; }
 
+        public CommerceCommander CommerceCommander { get; }
+
         public CommercePipelineExecutionContext Context { get; }
 
-        protected BaseComponentMapper(IComponentHandler componentHandler, CommercePipelineExecutionContext context)
+        protected BaseComponentMapper(IComponentHandler componentHandler, CommerceCommander commerceCommander, CommercePipelineExecutionContext context)
         {
             this.ComponentHandler = componentHandler;
+            this.CommerceCommander = commerceCommander;
             this.Context = context;
         }
 
         public virtual Component Map()
         {
             Type t = typeof(T);
-            if (t == null)
-                throw new InvalidOperationException("Type cannot be null.");
 
-            T component = default(T);
+            T component;
 
             if (!this.AllowMultipleComponents)
             {
@@ -54,8 +55,6 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Mappers
         public virtual LocalizableComponentPropertiesValues Map(ILanguageEntity languageEntity, LocalizableComponentPropertiesValues localizableComponentPropertiesValues)
         {
             Type t = typeof(T);
-            if (t == null)
-                throw new InvalidOperationException("Type cannot be null.");
 
             var component = Activator.CreateInstance(t) as T;
 
@@ -134,6 +133,16 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Mappers
         protected virtual string ComponentId
         {
             get { return string.Empty; }
+        }
+
+        public virtual ComponentAction GetComponentAction()
+        {
+            return ComponentAction.Map;
+        }
+
+        public virtual Component Remove()
+        {
+            return this.ComponentHandler.RemoveComponent<T>();
         }
     }
 }

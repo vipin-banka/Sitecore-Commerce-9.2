@@ -20,13 +20,16 @@ namespace Plugin.Accelerator.CatalogImport.Framework.ImportHandlers
 
         public TCommerceEntity CommerceEntity { get; set; }
 
+        public CommerceCommander CommerceCommander { get; }
+
         public CommercePipelineExecutionContext Context { get; }
 
         public IDictionary<string, IList<string>> ParentEntityIds { get; set; }
 
-        public BaseEntityImportHandler(string sourceEntity, CommercePipelineExecutionContext context)
+        public BaseEntityImportHandler(string sourceEntity, CommerceCommander commerceCommander, CommercePipelineExecutionContext context)
         {
             this.SourceEntity = JsonConvert.DeserializeObject<TSourceEntity>(sourceEntity);
+            this.CommerceCommander = commerceCommander;
             this.Context = context;
         }
 
@@ -35,6 +38,11 @@ namespace Plugin.Accelerator.CatalogImport.Framework.ImportHandlers
         public IEntity GetSourceEntity()
         {
             return this.SourceEntity;
+        }
+
+        public virtual bool Validate()
+        {
+            return true;
         }
 
         public CommerceEntity GetCommerceEntity()
@@ -65,7 +73,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.ImportHandlers
         {
         }
 
-        public abstract Task<CommerceEntity> Create(IServiceProvider serviceProvider, CommercePipelineExecutionContext context);
+        public abstract Task<CommerceEntity> Create();
 
         public virtual IList<string> GetParentList()
         {
@@ -128,14 +136,14 @@ namespace Plugin.Accelerator.CatalogImport.Framework.ImportHandlers
         public virtual IList<LocalizablePropertyValues> Map(ILanguageEntity languageEntity, IList<LocalizablePropertyValues> entityLocalizableProperties)
         {
             Type t = typeof(TCommerceEntity);
-            if (t == null)
-                throw new InvalidOperationException("Type cannot be null.");
 
             var commerceEntity = Activator.CreateInstance(t) as TCommerceEntity;
 
             ILanguageEntity<TSourceEntity> l = languageEntity as ILanguageEntity<TSourceEntity>;
             if (l == null)
-                throw new InvalidOperationException("Language entity cannot be null.");
+            {
+                this.Context.Abort("Language entity cannot be null", this.Context);
+            }
 
             this.MapLocalizeValues(l.Entity, commerceEntity);
 
@@ -180,7 +188,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.ImportHandlers
             return entityLocalizableProperties;
         }
 
-        protected virtual void MapLocalizeValues(TSourceEntity sourceEntity, TCommerceEntity targetEntity)
+        protected virtual void MapLocalizeValues(TSourceEntity localizedSourceEntity, TCommerceEntity localizedTargetEntity)
         {
         }
     }

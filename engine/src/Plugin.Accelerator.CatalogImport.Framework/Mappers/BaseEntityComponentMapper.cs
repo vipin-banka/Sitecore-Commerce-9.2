@@ -11,14 +11,14 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Mappers
     {
         public TSourceEntity SourceEntity { get; }
 
-        protected BaseEntityComponentMapper(TSourceEntity sourceEntity, TCommerceEntity commerceEntity, CommercePipelineExecutionContext context)
-        :base(new CommerceEntityComponentHandler(commerceEntity), context)
+        protected BaseEntityComponentMapper(TSourceEntity sourceEntity, TCommerceEntity commerceEntity, CommerceCommander commerceCommander, CommercePipelineExecutionContext context)
+        :base(new CommerceEntityComponentHandler(commerceEntity), commerceCommander, context)
         {
             this.SourceEntity = sourceEntity;
         }
 
-        protected BaseEntityComponentMapper(TSourceEntity sourceEntity, IComponentHandler componentHandler, CommercePipelineExecutionContext context)
-            : base(componentHandler, context)
+        protected BaseEntityComponentMapper(TSourceEntity sourceEntity, IComponentHandler componentHandler, CommerceCommander commerceCommander, CommercePipelineExecutionContext context)
+            : base(componentHandler, commerceCommander, context)
         {
             this.SourceEntity = sourceEntity;
         }

@@ -14,8 +14,8 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Mappers
     {
         protected TSourceVariant SourceVariant { get; }
 
-        protected BaseVariantComponentMapper(TSourceEntity sourceEntity, TSourceVariant sourceVariant, CommerceEntity commerceEntity, Component parentComponent, CommercePipelineExecutionContext context)
-        : base(sourceEntity, new ItemVariationComponentChildComponentHandler(commerceEntity, parentComponent), context)
+        protected BaseVariantComponentMapper(TSourceEntity sourceEntity, TSourceVariant sourceVariant, CommerceEntity commerceEntity, Component parentComponent, CommerceCommander commerceCommander, CommercePipelineExecutionContext context)
+        : base(sourceEntity, new CommerceParentComponentChildComponentHandler(commerceEntity, parentComponent), commerceCommander, context)
         {
             this.SourceVariant = sourceVariant;
         }

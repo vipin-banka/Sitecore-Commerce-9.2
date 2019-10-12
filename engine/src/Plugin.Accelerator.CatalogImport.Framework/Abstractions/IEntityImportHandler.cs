@@ -11,9 +11,11 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Abstractions
 
         IDictionary<string, IList<string>> ParentEntityIds { get; set; }
 
-        Task<CommerceEntity> Create(IServiceProvider serviceProvider, CommercePipelineExecutionContext context);
+        Task<CommerceEntity> Create();
 
         IEntity GetSourceEntity();
+
+        bool Validate();
 
         CommerceEntity GetCommerceEntity();
 

@@ -7,8 +7,8 @@ namespace Plugin.Accelerator.CatalogImport.Sample.Mappers.ItemVariantComponentMa
 {
     public class ItemVariationComponentMapper : BaseItemVariationComponentMapper<SourceProduct, SourceProductVariant, CommerceEntity>
     {
-        public ItemVariationComponentMapper(SourceProduct product, SourceProductVariant productVariant, CommerceEntity commerceEntity, Component parentComponent, CommercePipelineExecutionContext context)
-            :base(product, productVariant, commerceEntity, parentComponent, context)
+        public ItemVariationComponentMapper(SourceProduct product, SourceProductVariant productVariant, CommerceEntity commerceEntity, Component parentComponent, CommerceCommander commerceCommander, CommercePipelineExecutionContext context)
+            :base(product, productVariant, commerceEntity, parentComponent, commerceCommander, context)
         { }
 
         protected override string ComponentId => this.SourceVariant.Id;

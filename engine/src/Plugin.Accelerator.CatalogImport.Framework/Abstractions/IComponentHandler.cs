@@ -13,6 +13,8 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Abstractions
 
         Component AddComponent(Component component);
 
+        Component RemoveComponent<T>() where T : Component;
+
         Type GetEntityType();
     }
 }

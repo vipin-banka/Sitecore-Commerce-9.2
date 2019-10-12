@@ -1,7 +1,6 @@
 ﻿using Plugin.Accelerator.CatalogImport.Framework.Abstractions;
 using Sitecore.Commerce.Core;
 using Sitecore.Commerce.Plugin.Catalog;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -14,18 +13,16 @@ namespace Plugin.Accelerator.CatalogImport.Framework.ImportHandlers
 
         protected string DisplayName { get; set; }
 
-        public CatalogImportHandler(string sourceEntity, CommercePipelineExecutionContext context)
-        :base(sourceEntity, context)
+        public CatalogImportHandler(string sourceEntity, CommerceCommander commerceCommander, CommercePipelineExecutionContext context)
+        :base(sourceEntity, commerceCommander, context)
         {
         }
 
-        public override async Task<CommerceEntity> Create(IServiceProvider serviceProvider, CommercePipelineExecutionContext context)
+        public override async Task<CommerceEntity> Create()
         {
             this.Initialize();
-            var command  = serviceProvider.GetService(typeof(CreateCatalogCommand)) as CreateCatalogCommand;
-            if (command == null)
-                throw new InvalidOperationException("Catalog cannot be created, CreateCatalogCommand not found.");
-            this.CommerceEntity = await command.Process(context.CommerceContext, Name, DisplayName);
+            var command  = this.CommerceCommander.Command<CreateCatalogCommand>();
+            this.CommerceEntity = await command.Process(this.Context.CommerceContext, Name, DisplayName);
             return this.CommerceEntity;
         }
 

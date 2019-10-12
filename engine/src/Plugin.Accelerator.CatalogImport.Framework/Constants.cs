@@ -14,9 +14,23 @@
 
         public const string ConfigureServiceApiBlock = "CatalogImport.Framework.block.ConfigureServiceApi";
 
+        public const string PrepImportEntityBlock = "CatalogImport.Framework.block.PrepImportEntity";
+
+        public const string ResolveImportHandlerInstanceBlock = "CatalogImport.Framework.block.ResolveImportHandlerInstance";
+
+        public const string GetSourceEntityBlock = "CatalogImport.Framework.block.GetSourceEntity";
+
+        public const string ValidateSourceEntityBlock = "CatalogImport.Framework.block.ValidateSourceEntity";
+
         public const string ImportEntityBlock = "CatalogImport.Framework.block.ImportEntity";
 
-        public const string SetComponentsBlock = "CatalogImport.Framework.block.SetComponents";
+        public const string UpdateEntityBlock = "CatalogImport.Framework.block.UpdateEntity";
+
+        public const string SetEntityComponentsBlock = "CatalogImport.Framework.block.SetEntityComponents";
+
+        public const string ImportEntityVariantsBlock = "CatalogImport.Framework.block.ImportEntityVariants";
+
+        public const string SetItemVariantsComponentsBlock = "CatalogImport.Framework.block.SetItemVariantsComponents";
 
         public const string SetComponentsOnCatalogEntityBlock = "CatalogImport.Framework.block.SetComponentsOnCatalogEntity";
 

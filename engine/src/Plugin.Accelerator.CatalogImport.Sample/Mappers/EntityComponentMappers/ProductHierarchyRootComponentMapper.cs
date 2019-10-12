@@ -7,8 +7,8 @@ namespace Plugin.Accelerator.CatalogImport.Sample.Mappers.EntityComponentMappers
 {
     public class ProductHierarchyRootComponentMapper : BaseEntityComponentMapper<SourceProduct, CommerceEntity, ProductHierarchyRootComponent>
     {
-        public ProductHierarchyRootComponentMapper(SourceProduct product, CommerceEntity commerceEntity, CommercePipelineExecutionContext context)
-            : base(product, commerceEntity, context)
+        public ProductHierarchyRootComponentMapper(SourceProduct product, CommerceEntity commerceEntity, CommerceCommander commerceCommander, CommercePipelineExecutionContext context)
+            : base(product, commerceEntity, commerceCommander, context)
         { }
 
         protected override void Map(ProductHierarchyRootComponent component)

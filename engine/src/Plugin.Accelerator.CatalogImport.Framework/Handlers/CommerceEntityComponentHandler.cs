@@ -21,7 +21,9 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Handlers
 
         public virtual Component GetComponent(Type type, string id)
         {
-            return this.ParenEntity.EntityComponents.FirstOrDefault(c => c.GetType() == type && c.Id.Equals(id, StringComparison.OrdinalIgnoreCase));
+            return this.ParenEntity.EntityComponents.FirstOrDefault(c => 
+                (!string.IsNullOrEmpty(id) && c.Id.Equals(id, StringComparison.OrdinalIgnoreCase))
+                || c.GetType() == type);
         }
 
         public virtual void SetComponent(Component component)
@@ -41,14 +43,20 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Handlers
             return existingComponent;
         }
 
+        public virtual Component RemoveComponent<T>() where T : Component
+        {
+            var component = this.GetComponent(typeof(T));
+            if (component != null)
+            {
+                this.ParenEntity.RemoveComponent(typeof(T));
+            }
+
+            return component;
+        }
+
         public virtual Type GetEntityType()
         {
             return this.ParenEntity.GetType();
-        }
-
-        public virtual string GetParentTypeName()
-        {
-            return this.ParenEntity.GetType().Name;
         }
     }
 }

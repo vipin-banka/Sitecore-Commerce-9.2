@@ -6,8 +6,8 @@ namespace Plugin.Accelerator.CatalogImport.Sample.EntityImportHandlers
 {
     public class SourceCatalogImportHandler : CatalogImportHandler<SourceCatalog>
     {
-        public SourceCatalogImportHandler(string sourceCatalog, CommercePipelineExecutionContext context)
-            : base(sourceCatalog, context)
+        public SourceCatalogImportHandler(string sourceCatalog, CommerceCommander commerceCommander, CommercePipelineExecutionContext context)
+            : base(sourceCatalog, commerceCommander, context)
         {
         }
 
@@ -23,9 +23,9 @@ namespace Plugin.Accelerator.CatalogImport.Sample.EntityImportHandlers
             this.CommerceEntity.DisplayName = this.SourceEntity.DisplayName;
         }
 
-        protected override void MapLocalizeValues(SourceCatalog sourceEntity, Sitecore.Commerce.Plugin.Catalog.Catalog targetEntity)
+        protected override void MapLocalizeValues(SourceCatalog localizedSourceEntity, Sitecore.Commerce.Plugin.Catalog.Catalog localizedTargetEntity)
         {
-            targetEntity.DisplayName = sourceEntity.DisplayName;
+            localizedTargetEntity.DisplayName = localizedSourceEntity.DisplayName;
         }
     }
 }

@@ -30,19 +30,17 @@ namespace Plugin.Accelerator.CatalogImport.Framework.ImportHandlers
 
         protected IList<string> Tags { get; set; }
 
-        public SellableItemImportHandler(string sourceEntity, CommercePipelineExecutionContext context)
-            : base(sourceEntity, context)
+        public SellableItemImportHandler(string sourceEntity, CommerceCommander commerceCommander, CommercePipelineExecutionContext context)
+            : base(sourceEntity, commerceCommander, context)
         {
             this.Tags = new List<string>();
         }
 
-        public override async Task<CommerceEntity> Create(IServiceProvider serviceProvider, CommercePipelineExecutionContext context)
+        public override async Task<CommerceEntity> Create()
         {
             this.Initialize();
-            var command = serviceProvider.GetService(typeof(CreateSellableItemCommand)) as CreateSellableItemCommand;
-            if (command == null)
-                throw new InvalidOperationException("SellableItem cannot be created, CreateSellableItemCommand not found.");
-            this.CommerceEntity = await command.Process(context.CommerceContext, ProductId, Name, DisplayName, Description, Brand, Manufacturer, TypeOfGood, Tags.ToArray());
+            var command = this.CommerceCommander.Command<CreateSellableItemCommand>();
+            this.CommerceEntity = await command.Process(this.Context.CommerceContext, ProductId, Name, DisplayName, Description, Brand, Manufacturer, TypeOfGood, Tags.ToArray());
             return this.CommerceEntity;
         }
 

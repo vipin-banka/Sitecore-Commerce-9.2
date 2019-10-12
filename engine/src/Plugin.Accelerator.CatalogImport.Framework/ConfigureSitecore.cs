@@ -29,12 +29,18 @@
                 .AddPipeline<IImportEntityPipeline, ImportEntityPipeline>(configure =>
                 {
                     configure
+                        .Add<PrepImportEntityBlock>()
+                        .Add<ResolveImportHandlerInstanceBlock>()
+                        .Add<GetSourceEntityBlock>()
+                        .Add<ValidateEntityBlock>()
                         .Add<ImportEntityBlock>();
                 })
                 .AddPipeline<ISetComponentsPipeline, SetComponentsPipeline>(configure =>
                 {
                     configure
-                        .Add<SetComponentsBlocks>();
+                        .Add<UpdateEntityBlock>()
+                        .Add<SetEntityComponentsBlock>()
+                        .Add<ImportEntityVariantsBlock>();
                 })
                 .ConfigurePipeline<ICreateCatalogPipeline>(configure =>
                 {

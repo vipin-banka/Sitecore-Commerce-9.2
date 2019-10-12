@@ -7,8 +7,8 @@ namespace Plugin.Accelerator.CatalogImport.Sample.EntityImportHandlers
 {
     public class SourceProductImportHandler : SellableItemImportHandler<SourceProduct>
     {
-        public SourceProductImportHandler(string sourceProduct, CommercePipelineExecutionContext context)
-            : base(sourceProduct, context)
+        public SourceProductImportHandler(string sourceProduct, CommerceCommander commerceCommander, CommercePipelineExecutionContext context)
+            : base(sourceProduct, commerceCommander, context)
         {
         }
 
@@ -30,10 +30,10 @@ namespace Plugin.Accelerator.CatalogImport.Sample.EntityImportHandlers
             this.CommerceEntity.Description = this.SourceEntity.Description;
         }
 
-        protected override void MapLocalizeValues(SourceProduct sourceEntity, SellableItem targetEntity)
+        protected override void MapLocalizeValues(SourceProduct localizedSourceEntity, SellableItem localizedTargetEntity)
         {
-            targetEntity.DisplayName = sourceEntity.DisplayName;
-            targetEntity.Description = sourceEntity.Description;
+            localizedTargetEntity.DisplayName = localizedSourceEntity.DisplayName;
+            localizedTargetEntity.Description = localizedSourceEntity.Description;
         }
     }
 }

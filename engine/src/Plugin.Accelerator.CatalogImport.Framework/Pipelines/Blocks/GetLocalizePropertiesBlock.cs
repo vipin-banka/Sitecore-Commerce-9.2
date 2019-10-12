@@ -14,6 +14,13 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
     [PipelineDisplayName(Constants.GetLocalizePropertiesBlock)]
     public class GetLocalizePropertiesBlock : PipelineBlock<ImportLocalizeContentArgument, ImportLocalizeContentArgument, CommercePipelineExecutionContext>
     {
+        private readonly CommerceCommander _commerceCommander;
+
+        public GetLocalizePropertiesBlock(CommerceCommander commerceCommander)
+        {
+            this._commerceCommander = commerceCommander;
+        }
+
         public override async Task<ImportLocalizeContentArgument> Run(ImportLocalizeContentArgument arg, CommercePipelineExecutionContext context)
         {
             if (arg.ImportHandler.HasLanguages())
@@ -39,6 +46,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
                                 arg.CommerceEntity.GetType(),
                                 language,
                                 entityLocalizableProperties,
+                                _commerceCommander,
                                 context);
                     }
 
@@ -55,6 +63,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
                                 language.GetEntity(),
                                 language,
                                 componentsPropertiesList,
+                                _commerceCommander,
                                 context);
                     }
 
@@ -77,6 +86,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
                             variant,
                             language,
                             componentsPropertiesList,
+                            _commerceCommander,
                             context);
 
                         if (itemVariationComponent.ChildComponents != null 
@@ -91,6 +101,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
                                     variant,
                                     language,
                                     componentsPropertiesList,
+                                    _commerceCommander,
                                     context);
                             }
                         }

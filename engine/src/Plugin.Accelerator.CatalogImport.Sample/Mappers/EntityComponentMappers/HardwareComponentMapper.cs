@@ -7,8 +7,8 @@ namespace Plugin.Accelerator.CatalogImport.Sample.Mappers.EntityComponentMappers
 {
     public class HardwareComponentMapper : BaseEntityComponentMapper<SourceProduct, CommerceEntity, HardwareComponent>
     {
-        public HardwareComponentMapper(SourceProduct product, CommerceEntity commerceEntity, CommercePipelineExecutionContext context)
-            : base(product, commerceEntity, context)
+        public HardwareComponentMapper(SourceProduct product, CommerceEntity commerceEntity, CommerceCommander commerceCommander, CommercePipelineExecutionContext context)
+            : base(product, commerceEntity, commerceCommander, context)
         { }
 
         protected override void Map(HardwareComponent component)

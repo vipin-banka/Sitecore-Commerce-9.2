@@ -7,8 +7,8 @@ namespace Plugin.Accelerator.CatalogImport.Sample.Mappers.VariantComponentMapper
 {
     public class VariantComponentMapper : BaseVariantComponentMapper<SourceProduct, SourceProductVariant, CommerceEntity, VariantComponent>
     {
-        public VariantComponentMapper(SourceProduct product, SourceProductVariant productVariant, CommerceEntity commerceEntity, Component parentComponent, CommercePipelineExecutionContext context)
-            :base(product, productVariant, commerceEntity, parentComponent, context)
+        public VariantComponentMapper(SourceProduct product, SourceProductVariant productVariant, CommerceEntity commerceEntity, Component parentComponent, CommerceCommander commerceCommander, CommercePipelineExecutionContext context)
+            :base(product, productVariant, commerceEntity, parentComponent, commerceCommander, context)
         { }
 
         protected override void Map(VariantComponent component)
