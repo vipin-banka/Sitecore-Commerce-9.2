@@ -3,6 +3,8 @@ using Sitecore.Commerce.Core;
 using Sitecore.Framework.Pipelines;
 using System.Linq;
 using System.Threading.Tasks;
+using Plugin.Accelerator.CatalogImport.Framework.Extensions;
+using Plugin.Accelerator.CatalogImport.Framework.Model;
 
 namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
 {
@@ -16,29 +18,41 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
             this._commerceCommander = commerceCommander;
         }
 
-        public override Task<CommerceEntity> Run(CommerceEntity arg, CommercePipelineExecutionContext context)
+        public override async Task<CommerceEntity> Run(CommerceEntity arg, CommercePipelineExecutionContext context)
         {
             var importEntityArgument = context.CommerceContext.GetObject<ImportEntityArgument>();
             if (importEntityArgument?.SourceEntity != null)
             {
-                this.SetCommerceEntityComponents(arg, importEntityArgument, context);
+                await this.SetCommerceEntityComponents(arg, importEntityArgument, context).ConfigureAwait(false);
             }
 
-            return Task.FromResult(arg);
+            return arg;
         }
 
-        private void SetCommerceEntityComponents(CommerceEntity commerceEntity, ImportEntityArgument importEntityArgument,  CommercePipelineExecutionContext context)
+        private async Task SetCommerceEntityComponents(CommerceEntity commerceEntity, ImportEntityArgument importEntityArgument,  CommercePipelineExecutionContext context)
         {
             if (importEntityArgument.SourceEntityDetail.Components != null && importEntityArgument.SourceEntityDetail.Components.Any())
             {
                 foreach (var componentName in importEntityArgument.SourceEntityDetail.Components)
                 {
-                    importEntityArgument.CatalogImportPolicy.Mappings.MapEntityChildComponent(
-                        commerceEntity,
-                        importEntityArgument.SourceEntity,
-                        componentName,
-                        _commerceCommander,
-                        context);
+                    var mapper = await this._commerceCommander.Pipeline<IResolveComponentMapperPipeline>()
+                        .Run(new ResolveComponentMapperArgument(importEntityArgument, commerceEntity, componentName), context)
+                        .ConfigureAwait(false);
+
+                    if (mapper == null)
+                    {
+                        var message = new CommandMessage
+                        {
+                            Text =
+                                $"Component mapper not found for {componentName}."
+                        };
+                        context.CommerceContext.AddMessage(message);
+                    }
+                    else
+                    {
+                        var component =  mapper.Execute(null);
+                        component.SetComponentMetadataPolicy(componentName);
+                    }
                 }
             }
         }

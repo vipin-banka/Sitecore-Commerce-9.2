@@ -8,7 +8,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
     [PipelineDisplayName(Constants.ResolveImportHandlerInstanceBlock)]
     public class ResolveImportHandlerInstanceBlock : PipelineBlock<ImportEntityArgument, ImportEntityArgument, CommercePipelineExecutionContext>
     {
-        private CommerceCommander _commerceCommander;
+        private readonly CommerceCommander _commerceCommander;
 
         public ResolveImportHandlerInstanceBlock(
             CommerceCommander commerceCommander)
@@ -16,9 +16,11 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
             this._commerceCommander = commerceCommander;
         }
 
-        public override Task<ImportEntityArgument> Run(ImportEntityArgument arg, CommercePipelineExecutionContext context)
+        public override async Task<ImportEntityArgument> Run(ImportEntityArgument arg, CommercePipelineExecutionContext context)
         {
-            var importHandler = arg.CatalogImportPolicy.Mappings.GetImportHandlerInstance(arg, _commerceCommander, context);
+            var importHandler = await this._commerceCommander.Pipeline<IResolveEntityImportHandlerPipeline>()
+                .Run(new ResolveEntityImportHandlerArgument(arg), context)
+                .ConfigureAwait(false);
 
             if (importHandler == null)
             {
@@ -26,7 +28,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
             }
 
             arg.ImportHandler = importHandler;
-            return Task.FromResult(arg);
+            return arg;
         }
     }
 }

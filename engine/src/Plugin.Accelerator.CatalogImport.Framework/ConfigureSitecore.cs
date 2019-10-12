@@ -35,12 +35,37 @@
                         .Add<ValidateEntityBlock>()
                         .Add<ImportEntityBlock>();
                 })
+                .AddPipeline<IResolveEntityImportHandlerPipeline, ResolveEntityImportHandlerPipeline>(configure =>
+                {
+                    configure
+                        .Add<ResolveImportHandlerInstanceBlock>();
+                })
                 .AddPipeline<ISetComponentsPipeline, SetComponentsPipeline>(configure =>
                 {
                     configure
                         .Add<UpdateEntityBlock>()
                         .Add<SetEntityComponentsBlock>()
                         .Add<ImportEntityVariantsBlock>();
+                })
+                .AddPipeline<IResolveEntityMapperPipeline, ResolveEntityMapperPipeline>(configure =>
+                {
+                    configure
+                        .Add<ResolveEntityMapperBlock>();
+                })
+                .AddPipeline<IResolveComponentMapperPipeline, ResolveComponentMapperPipeline>(configure =>
+                {
+                    configure
+                        .Add<ResolveComponentMapperBlock>();
+                })
+                .AddPipeline<IResolveEntityLocalizationMapperPipeline, ResolveEntityLocalizationMapperPipeline>(configure =>
+                {
+                    configure
+                        .Add<ResolveEntityLocalizationMapperBlock>();
+                })
+                .AddPipeline<IResolveComponentLocalizationMapperPipeline, ResolveComponentLocalizationMapperPipeline>(configure =>
+                {
+                    configure
+                        .Add<ResolveComponentLocalizationMapperBlock>();
                 })
                 .ConfigurePipeline<ICreateCatalogPipeline>(configure =>
                 {

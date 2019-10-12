@@ -1,7 +1,7 @@
 ﻿using Plugin.Accelerator.CatalogImport.Framework.Abstractions;
+using Plugin.Accelerator.CatalogImport.Framework.Extensions;
 using Plugin.Accelerator.CatalogImport.Framework.Model;
 using Plugin.Accelerator.CatalogImport.Framework.Pipelines.Arguments;
-using Plugin.Accelerator.CatalogImport.Framework.Policy;
 using Sitecore.Commerce.Core;
 using Sitecore.Commerce.Plugin.Catalog;
 using Sitecore.Framework.Pipelines;
@@ -23,89 +23,27 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
 
         public override async Task<ImportLocalizeContentArgument> Run(ImportLocalizeContentArgument arg, CommercePipelineExecutionContext context)
         {
-            if (arg.ImportHandler.HasLanguages())
+            if (arg.ImportEntityArgument.ImportHandler.HasLanguages())
             {
-                var catalogImportPolicy = context.CommerceContext.GetPolicy<CatalogImportPolicy>();
-
                 IList<LocalizablePropertyValues> entityLocalizableProperties = null;
 
                 IList<LocalizableComponentPropertiesValues> componentsPropertiesList = new List<LocalizableComponentPropertiesValues>();
 
-                foreach (var language in arg.ImportHandler.GetLanguages())
+                foreach (var language in arg.ImportEntityArgument.ImportHandler.GetLanguages())
                 {
-                    if (arg.ImportHandler is IEntityLocalizationMapper mapper)
-                    {
-                        entityLocalizableProperties = mapper.Map(language, entityLocalizableProperties);
-                    }
-                    else
-                    {
-                        entityLocalizableProperties = catalogImportPolicy
-                            .Mappings
-                            .GetEntityLocalizableProperties(
-                                language.GetEntity(),
-                                arg.CommerceEntity.GetType(),
-                                language,
-                                entityLocalizableProperties,
-                                _commerceCommander,
-                                context);
-                    }
+                    entityLocalizableProperties = await PerformEntityLocalization(arg, context, language, entityLocalizableProperties).ConfigureAwait(false);
 
                     if (arg.CommerceEntity.EntityComponents == null || !arg.CommerceEntity.EntityComponents.Any())
                         continue;
 
-                    foreach (var commerceEntityComponent in arg.CommerceEntity.EntityComponents)
-                    {
-                        catalogImportPolicy
-                            .Mappings
-                            .GetEntityComponentLocalizableProperties(
-                                arg.CommerceEntity,
-                                commerceEntityComponent,
-                                language.GetEntity(),
-                                language,
-                                componentsPropertiesList,
-                                _commerceCommander,
-                                context);
-                    }
+                    await PerformEntityComponentsLocalization(arg, context, language, componentsPropertiesList).ConfigureAwait(false);
 
-                    if (!arg.ImportHandler.HasVariants(language) )
+                    if (!arg.ImportEntityArgument.ImportHandler.HasVariants(language) )
                     {
                         continue;
                     }
 
-                    foreach (var variant in arg.ImportHandler.GetVariants(language))
-                    {
-                        var itemVariationComponent = (arg.CommerceEntity as SellableItem).GetVariation(variant.Id);
-
-                        if (itemVariationComponent == null)
-                            continue;
-
-                        catalogImportPolicy.Mappings.GetItemVariantComponentLocalizableProperties(
-                            arg.CommerceEntity,
-                            itemVariationComponent,
-                            language.GetEntity(),
-                            variant,
-                            language,
-                            componentsPropertiesList,
-                            _commerceCommander,
-                            context);
-
-                        if (itemVariationComponent.ChildComponents != null 
-                            && itemVariationComponent.ChildComponents.Any())
-                        {
-                            foreach (var component in itemVariationComponent.ChildComponents)
-                            {
-                                catalogImportPolicy.Mappings.GetVariantComponentsLocalizableProperties(
-                                    arg.CommerceEntity,
-                                    component,
-                                    language.GetEntity(),
-                                    variant,
-                                    language,
-                                    componentsPropertiesList,
-                                    _commerceCommander,
-                                    context);
-                            }
-                        }
-                    }
+                    await PerformEntityVariantsLocalization(arg, context, language, componentsPropertiesList).ConfigureAwait(false);
                 }
 
                 arg.Properties = entityLocalizableProperties;
@@ -113,6 +51,87 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
             }
 
             return await Task.FromResult(arg);
+        }
+
+        private async Task PerformEntityVariantsLocalization(ImportLocalizeContentArgument arg,
+            CommercePipelineExecutionContext context, ILanguageEntity language,
+            IList<LocalizableComponentPropertiesValues> componentsPropertiesList)
+        {
+            foreach (var variant in arg.ImportEntityArgument.ImportHandler.GetVariants(language))
+            {
+                var itemVariationComponent = arg.CommerceEntity.GetVariation(variant.Id);
+
+                if (itemVariationComponent == null)
+                    continue;
+
+                var itemVariantComponentLocalizationMapper = await this._commerceCommander
+                    .Pipeline<IResolveComponentLocalizationMapperPipeline>()
+                    .Run(new ResolveComponentLocalizationMapperArgument(arg.ImportEntityArgument, arg.CommerceEntity,
+                            itemVariationComponent, language, variant), context).ConfigureAwait(false);
+                itemVariantComponentLocalizationMapper.Execute(componentsPropertiesList, itemVariationComponent,
+                    language);
+
+                await PerformEntityVariantLocalization(arg, context, language, componentsPropertiesList, itemVariationComponent, variant).ConfigureAwait(false);
+            }
+        }
+
+        private async Task PerformEntityVariantLocalization(ImportLocalizeContentArgument arg,
+            CommercePipelineExecutionContext context, ILanguageEntity language, IList<LocalizableComponentPropertiesValues> componentsPropertiesList,
+            ItemVariationComponent itemVariationComponent, IEntity variant)
+        {
+            if (itemVariationComponent.ChildComponents != null
+                && itemVariationComponent.ChildComponents.Any())
+            {
+                foreach (var component in itemVariationComponent.ChildComponents)
+                {
+                    var mapper = await this._commerceCommander.Pipeline<IResolveComponentLocalizationMapperPipeline>()
+                        .Run(new
+                            ResolveComponentLocalizationMapperArgument(arg.ImportEntityArgument, arg.CommerceEntity,
+                                component, language, variant), context).ConfigureAwait(false);
+
+                    mapper.Execute(componentsPropertiesList, component, language);
+                }
+            }
+        }
+
+        private async Task PerformEntityComponentsLocalization(ImportLocalizeContentArgument arg,
+            CommercePipelineExecutionContext context, ILanguageEntity language, IList<LocalizableComponentPropertiesValues> componentsPropertiesList)
+        {
+            foreach (var commerceEntityComponent in arg.CommerceEntity.EntityComponents)
+            {
+                var entityComponentLocalizationMapper = await this._commerceCommander
+                    .Pipeline<IResolveComponentLocalizationMapperPipeline>()
+                    .Run(
+                        new ResolveComponentLocalizationMapperArgument(arg.ImportEntityArgument,
+                            arg.CommerceEntity, commerceEntityComponent, language), context)
+                    .ConfigureAwait(false);
+
+                entityComponentLocalizationMapper.Execute(componentsPropertiesList, commerceEntityComponent,
+                    language);
+            }
+        }
+
+        private async Task<IList<LocalizablePropertyValues>> PerformEntityLocalization(ImportLocalizeContentArgument arg,
+            CommercePipelineExecutionContext context, ILanguageEntity language, IList<LocalizablePropertyValues> entityLocalizableProperties)
+        {
+            if (arg.ImportEntityArgument.ImportHandler is IEntityLocalizationMapper mapper)
+            {
+                entityLocalizableProperties = mapper.Map(language, entityLocalizableProperties);
+            }
+            else
+            {
+                var entityLocalizationMapper = await this._commerceCommander
+                    .Pipeline<IResolveEntityLocalizationMapperPipeline>()
+                    .Run(new ResolveEntityLocalizationMapperArgument(arg.ImportEntityArgument, language),
+                        context).ConfigureAwait(false);
+
+                if (entityLocalizationMapper != null)
+                {
+                    entityLocalizableProperties = entityLocalizationMapper.Map(language, entityLocalizableProperties);
+                }
+            }
+
+            return entityLocalizableProperties;
         }
     }
 }

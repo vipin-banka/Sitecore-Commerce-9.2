@@ -4,6 +4,16 @@
     {
         public const string ImportEntityPipeline = "CatalogImport.Framework.pipeline.ImportEntity";
 
+        public const string ResolveEntityImportHandlerPipeline = "CatalogImport.Framework.pipeline.ResolveEntityImportHandler";
+
+        public const string ResolveEntityMapperPipeline = "CatalogImport.Framework.pipeline.ResolveEntityMapper";
+
+        public const string ResolveEntityLocalizationMapperPipeline = "CatalogImport.Framework.pipeline.ResolveEntityLocalizationMapper";
+
+        public const string ResolveComponentLocalizationMapperPipeline = "CatalogImport.Framework.pipeline.ResolveComponentLocalizationMapper";
+
+        public const string ResolveComponentMapperPipeline = "CatalogImport.Framework.pipeline.ResolveComponentMapper";
+
         public const string AssociateParentsPipeline = "CatalogImport.Framework.pipeline.AssociateParents";
 
         public const string ImportLocalizeContentPipeline = "CatalogImport.Framework.pipeline.ImportLocalizeContent";
@@ -18,6 +28,14 @@
 
         public const string ResolveImportHandlerInstanceBlock = "CatalogImport.Framework.block.ResolveImportHandlerInstance";
 
+        public const string ResolveEntityImportHandlerBlock = "CatalogImport.Framework.block.ResolveEntityImportHandler";
+
+        public const string ResolveEntityMapperBlock = "CatalogImport.Framework.block.ResolveEntityMapper";
+
+        public const string ResolveEntityLocalizationMapperBlock = "CatalogImport.Framework.block.ResolveEntityLocalizationMapper";
+
+        public const string ResolveComponentLocalizationMapperBlock = "CatalogImport.Framework.block.ResolveComponentLocalizationMapper";
+
         public const string GetSourceEntityBlock = "CatalogImport.Framework.block.GetSourceEntity";
 
         public const string ValidateSourceEntityBlock = "CatalogImport.Framework.block.ValidateSourceEntity";
@@ -28,9 +46,9 @@
 
         public const string SetEntityComponentsBlock = "CatalogImport.Framework.block.SetEntityComponents";
 
-        public const string ImportEntityVariantsBlock = "CatalogImport.Framework.block.ImportEntityVariants";
+        public const string ResolveComponentMapperBlock = "CatalogImport.Framework.block.ResolveComponentMapper"; 
 
-        public const string SetItemVariantsComponentsBlock = "CatalogImport.Framework.block.SetItemVariantsComponents";
+        public const string ImportEntityVariantsBlock = "CatalogImport.Framework.block.ImportEntityVariants";
 
         public const string SetComponentsOnCatalogEntityBlock = "CatalogImport.Framework.block.SetComponentsOnCatalogEntity";
 

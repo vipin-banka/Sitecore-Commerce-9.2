@@ -1,5 +1,4 @@
-﻿using Plugin.Accelerator.CatalogImport.Framework.Abstractions;
-using Plugin.Accelerator.CatalogImport.Framework.Model;
+﻿using Plugin.Accelerator.CatalogImport.Framework.Model;
 using Sitecore.Commerce.Core;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,10 +7,10 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Arguments
 {
     public class ImportLocalizeContentArgument : PipelineArgument
     {
-        public ImportLocalizeContentArgument(CommerceEntity commerceEntity, IEntityImportHandler importHandler)
+        public ImportLocalizeContentArgument(CommerceEntity commerceEntity, ImportEntityArgument importEntityArgument)
         {
             this.CommerceEntity = commerceEntity;
-            this.ImportHandler = importHandler;
+            this.ImportEntityArgument = importEntityArgument;
         }
 
         public CommerceEntity CommerceEntity { get; set; }
@@ -22,7 +21,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Arguments
 
         public IList<LocalizableComponentPropertiesValues> ComponentsProperties { get; set; }
 
-        public IEntityImportHandler ImportHandler { get; set; }
+        public ImportEntityArgument ImportEntityArgument { get; set; }
 
         public bool HasLocalizationContent => (this.Properties != null && this.Properties.Any()) 
         || (this.ComponentsProperties != null && this.ComponentsProperties.Any());

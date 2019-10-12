@@ -5,6 +5,8 @@ using Sitecore.Framework.Pipelines;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Plugin.Accelerator.CatalogImport.Framework.Extensions;
+using Plugin.Accelerator.CatalogImport.Framework.Model;
 
 namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
 {
@@ -18,18 +20,19 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
             this._commerceCommander = commerceCommander;
         }
 
-        public override Task<CommerceEntity> Run(CommerceEntity arg, CommercePipelineExecutionContext context)
+        public override async Task<CommerceEntity> Run(CommerceEntity arg, CommercePipelineExecutionContext context)
         {
             var importEntityArgument = context.CommerceContext.GetObject<ImportEntityArgument>();
             if (importEntityArgument?.SourceEntity != null)
             {
-                this.ImportVariants(arg, importEntityArgument, context);
+                await this.ImportVariants(arg, importEntityArgument, context)
+                    .ConfigureAwait(false);
             }
 
-            return Task.FromResult(arg);
+            return arg;
         }
 
-        private void ImportVariants(CommerceEntity commerceEntity, ImportEntityArgument importEntityArgument,  CommercePipelineExecutionContext context)
+        private async Task ImportVariants(CommerceEntity commerceEntity, ImportEntityArgument importEntityArgument,  CommercePipelineExecutionContext context)
         {
             var orphanVariants = new List<ItemVariationComponent>();
             ItemVariationsComponent itemVariationsComponent = null;
@@ -54,27 +57,28 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
 
                 foreach (var variant in variants)
                 {
-                    var itemVariationComponent = importEntityArgument.CatalogImportPolicy.Mappings.MapItemVariationComponent(
-                        commerceEntity,
-                        itemVariationsComponent,
-                        importEntityArgument.SourceEntity,
-                        variant,
-                        _commerceCommander,
-                        context);
+                    var itemVariantMapper = await this._commerceCommander.Pipeline<IResolveComponentMapperPipeline>()
+                        .Run(
+                            new ResolveComponentMapperArgument(importEntityArgument, commerceEntity,
+                                itemVariationsComponent, variant, string.Empty), context).ConfigureAwait(false);
 
-                    if (importEntityArgument.SourceEntityDetail.VariantComponents != null
+                                        var action = itemVariantMapper.GetComponentAction();
+                    Component itemVariationComponent = itemVariantMapper.Execute(action);
+
+                    if (action != ComponentAction.Remove
+                        && importEntityArgument.SourceEntityDetail.VariantComponents != null
                         && importEntityArgument.SourceEntityDetail.VariantComponents.Any())
                     {
                         foreach (var variantComponentName in importEntityArgument.SourceEntityDetail.VariantComponents)
                         {
-                            importEntityArgument.CatalogImportPolicy.Mappings.MapComponentChildComponent(
-                                commerceEntity,
-                                itemVariationComponent,
-                                importEntityArgument.SourceEntity,
-                                variant,
-                                variantComponentName,
-                                _commerceCommander,
-                                context);
+                            var itemVariantChildComponentMapper = await this._commerceCommander
+                                .Pipeline<IResolveComponentMapperPipeline>().Run(new
+                                    ResolveComponentMapperArgument(importEntityArgument, commerceEntity,
+                                        itemVariationComponent, variant, variantComponentName), context)
+                                .ConfigureAwait(false);
+
+                            var childComponent = itemVariantChildComponentMapper.Execute();
+                            childComponent.SetComponentMetadataPolicy(variantComponentName);
                         }
                     }
                 }

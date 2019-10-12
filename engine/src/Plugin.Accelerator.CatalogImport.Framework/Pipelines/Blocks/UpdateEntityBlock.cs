@@ -16,18 +16,18 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
             this._commerceCommander = commerceCommander;
         }
 
-        public override Task<CommerceEntity> Run(CommerceEntity arg, CommercePipelineExecutionContext context)
+        public override async Task<CommerceEntity> Run(CommerceEntity arg, CommercePipelineExecutionContext context)
         {
             var importEntityArgument = context.CommerceContext.GetObject<ImportEntityArgument>();
             if (importEntityArgument?.SourceEntity != null)
             {
-                this.SetCommerceEntityDetails(arg, importEntityArgument, context);
+                await this.SetCommerceEntityDetails(arg, importEntityArgument, context).ConfigureAwait(false);
             }
 
-            return Task.FromResult(arg);
+            return arg;
         }
 
-        private void SetCommerceEntityDetails(CommerceEntity commerceEntity, ImportEntityArgument importEntityArgument, CommercePipelineExecutionContext context)
+        private async Task SetCommerceEntityDetails(CommerceEntity commerceEntity, ImportEntityArgument importEntityArgument, CommercePipelineExecutionContext context)
         {
             if (!importEntityArgument.IsNew)
             {
@@ -37,11 +37,23 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Pipelines.Blocks
                 }
                 else
                 {
-                    importEntityArgument.CatalogImportPolicy.Mappings.MapEntity(
-                        commerceEntity,
-                        importEntityArgument.SourceEntity,
-                        _commerceCommander,
-                        context);
+                    mapper = await this._commerceCommander.Pipeline<IResolveEntityMapperPipeline>()
+                        .Run(new ResolveEntityMapperArgument(importEntityArgument, commerceEntity), context)
+                        .ConfigureAwait(false);
+
+                    if (mapper == null)
+                    {
+                        var message = new CommandMessage
+                        {
+                            Text =
+                                $"Entity mapper not found for {importEntityArgument.SourceEntityDetail.EntityType}."
+                        };
+                        context.CommerceContext.AddMessage(message);
+                    }
+                    else
+                    {
+                        mapper.Map();
+                    }
                 }
             }
         }

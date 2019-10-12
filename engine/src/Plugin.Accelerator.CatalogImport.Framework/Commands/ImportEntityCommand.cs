@@ -39,7 +39,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Commands
 
                     // Manage localization values for sellable item
                     var importLocalizeContentArgument =
-                        new ImportLocalizeContentArgument(result, importEntityArgument.ImportHandler);
+                        new ImportLocalizeContentArgument(result, importEntityArgument);
                     await this.PerformTransaction(commerceContext, async () => await this.Pipeline<IImportLocalizeContentPipeline>().Run(
                         importLocalizeContentArgument, commerceContext.PipelineContextOptions));
                 }

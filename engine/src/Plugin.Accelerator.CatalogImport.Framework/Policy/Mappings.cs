@@ -5,6 +5,7 @@ using Sitecore.Commerce.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Plugin.Accelerator.CatalogImport.Framework.Extensions;
 
 namespace Plugin.Accelerator.CatalogImport.Framework.Policy
 {
@@ -18,7 +19,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Policy
 
         public IList<MapperType> ItemVariantionComponentMappings { get; set; }
 
-        public IEntityImportHandler GetImportHandlerInstance(ImportEntityArgument importEntityArgument, CommerceCommander commerceCommander, CommercePipelineExecutionContext context)
+        public IEntityImportHandler GetImportHandler(ImportEntityArgument importEntityArgument, CommerceCommander commerceCommander, CommercePipelineExecutionContext context)
         {
             var handlerType = this
                 .EntityMappings
@@ -30,66 +31,77 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Policy
 
                 if (t == null)
                 {
-                    context.Abort("Entity mapper type cannot be null.", context);
+                    context.Abort($"Entity mapper type cannot be null. EntityType={importEntityArgument.SourceEntityDetail.EntityType}", context);
                 }
-
-                if (Activator.CreateInstance(t, importEntityArgument.SourceEntityDetail.SerializedEntity, commerceCommander, context) is
-                    IEntityImportHandler handler)
+                else
                 {
-                    return handler;
+                    if (Activator.CreateInstance(t, importEntityArgument.SourceEntityDetail.SerializedEntity,
+                            commerceCommander, context) is
+                        IEntityImportHandler handler)
+                    {
+                        return handler;
+                    }
                 }
             }
 
             return null;
         }
 
-        public void MapEntity(CommerceEntity targetEntity, object sourceEntity, CommerceCommander commerceCommander, CommercePipelineExecutionContext context)
+        public IEntityMapper GetEntityMapper(CommerceEntity targetEntity, ImportEntityArgument importEntityArgument, CommerceCommander commerceCommander, CommercePipelineExecutionContext context)
         {
             var mapperType = this
                 .EntityMappings
-                .FirstOrDefault(x => x.Type.Equals(targetEntity.GetType().FullName, StringComparison.OrdinalIgnoreCase));
+                .FirstOrDefault(x => x.Key.Equals(importEntityArgument.SourceEntityDetail.EntityType, StringComparison.OrdinalIgnoreCase));
 
             if (mapperType != null)
             {
-                var t = Type.GetType(mapperType.FullTypeName);
+                var t = Type.GetType(mapperType.FullTypeName ?? mapperType.ImportHandlerTypeName);
 
                 if (t == null)
                 {
-                    context.Abort("Entity mapper type cannot be null.", context);
+                    context.Abort($"Entity mapper type cannot be null. EntityType={importEntityArgument.SourceEntityDetail.EntityType}", context);
                 }
-
-                if (Activator.CreateInstance(t, sourceEntity, targetEntity, commerceCommander, context) is IEntityMapper mapper)
+                else
                 {
-                    mapper.Map();
+                    if (Activator.CreateInstance(t, importEntityArgument.SourceEntity, targetEntity, commerceCommander,
+                        context) is IEntityMapper mapper)
+                    {
+                        return mapper;
+                    }
                 }
             }
+
+            return null;
         }
 
-        public IList<LocalizablePropertyValues> GetEntityLocalizableProperties(object sourceEntity, Type entityType, ILanguageEntity languageEntity, IList<LocalizablePropertyValues> entityLocalizableProperties, CommerceCommander commerceCommander, CommercePipelineExecutionContext context)
+        public IEntityLocalizationMapper GetEntityLocalizationMapper(ILanguageEntity languageEntity, ImportEntityArgument importEntityArgument, CommerceCommander commerceCommander, CommercePipelineExecutionContext context)
         {
             var mapperType = this
                 .EntityMappings
-                .FirstOrDefault(x => x.Type.Equals(entityType.FullName, StringComparison.OrdinalIgnoreCase));
+                .FirstOrDefault(x => x.Key.Equals(importEntityArgument.SourceEntityDetail.EntityType, StringComparison.OrdinalIgnoreCase));
 
             if (mapperType != null)
             {
-                var t = Type.GetType(mapperType.LocalizationFullTypeName ?? mapperType.FullTypeName);
+                var t = Type.GetType(mapperType.ImportHandlerTypeName ?? mapperType.FullTypeName ?? mapperType.LocalizationFullTypeName);
 
                 if (t == null)
                 {
-                    context.Abort("Entity localization mapper type cannot be null.", context);
+                    context.Abort($"Entity localization mapper type cannot be null. EntityType={importEntityArgument.SourceEntityDetail.EntityType}", context);
                 }
-
-                if (Activator.CreateInstance(t, sourceEntity, commerceCommander, context) is IEntityLocalizationMapper mapper)
+                else
                 {
-                   return mapper.Map(languageEntity, entityLocalizableProperties);
+                    if (Activator.CreateInstance(t, languageEntity.GetEntity(), commerceCommander, context) is
+                        IEntityLocalizationMapper mapper)
+                    {
+                        return mapper;
+                    }
                 }
             }
 
-            return new List<LocalizablePropertyValues>();
+            return null;
         }
 
-        public Component MapEntityChildComponent(CommerceEntity targetEntity, object sourceEntity, string componentMappingKey, CommerceCommander commerceCommander, CommercePipelineExecutionContext context)
+        public IComponentMapper GetEntityComponentMapper(CommerceEntity targetEntity, ImportEntityArgument importEntityArgument, string componentMappingKey, CommerceCommander commerceCommander, CommercePipelineExecutionContext context)
         {
             var mapperType = this
                 .EntityComponentMappings
@@ -101,21 +113,14 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Policy
 
                 if (t == null)
                 {
-                    context.Abort("Component mapper type cannot be null.", context);
+                    context.Abort($"Component mapper type cannot be null. ComponentMappingKey={componentMappingKey}", context);
                 }
-
-                if (Activator.CreateInstance(t, sourceEntity, targetEntity, commerceCommander, context) is IComponentMapper mapper)
+                else
                 {
-                    var action = mapper.GetComponentAction();
-                    if (action == ComponentAction.Ignore)
-                        return null;
-                    if (action == ComponentAction.Map)
+                    if (Activator.CreateInstance(t, importEntityArgument.SourceEntity, targetEntity, commerceCommander, context) is
+                        IComponentMapper mapper)
                     {
-                        return mapper.Map();
-                    }
-                    else
-                    {
-                        mapper.Remove();
+                        return mapper;
                     }
                 }
             }
@@ -123,11 +128,14 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Policy
             return null;
         }
 
-        public LocalizableComponentPropertiesValues GetEntityComponentLocalizableProperties(CommerceEntity targetEntity, Component component, object sourceEntity, ILanguageEntity languageEntity, IList<LocalizableComponentPropertiesValues> componentPropertiesList, CommerceCommander commerceCommander, CommercePipelineExecutionContext context)
+        public IComponentLocalizationMapper GetEntityComponentLocalizationMapper(CommerceEntity targetEntity, Component component,  ILanguageEntity languageEntity, CommerceCommander commerceCommander, CommercePipelineExecutionContext context)
         {
+            var metadataPolicy = component.GetComponentMetadataPolicy();
             var mapperType = this
                 .EntityComponentMappings
-                .FirstOrDefault(x => x.Type.Equals(component.GetType().FullName, StringComparison.OrdinalIgnoreCase));
+                .FirstOrDefault(x => 
+                    (metadataPolicy != null && !string.IsNullOrEmpty(metadataPolicy.MapperKey) && x.Key.Equals(metadataPolicy.MapperKey, StringComparison.OrdinalIgnoreCase))
+                    || x.Type.Equals(component.GetType().FullName, StringComparison.OrdinalIgnoreCase));
 
             if (mapperType != null)
             {
@@ -135,23 +143,14 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Policy
 
                 if (t == null)
                 {
-                    context.Abort("Component localization mapper type cannot be null.", context);
+                    context.Abort($"Component localization mapper type cannot be null. ComponentName={component.GetType().FullName}", context);
                 }
-
-                if (Activator.CreateInstance(t, sourceEntity, targetEntity, commerceCommander, context) is IComponentLocalizationMapper mapper)
+                else
                 {
-                    var componentProperties = componentPropertiesList.FirstOrDefault(x =>
-                        component.Id.Equals(x.Id, StringComparison.OrdinalIgnoreCase));
-
-                    componentProperties = mapper.Map(languageEntity, componentProperties);
-                    if (componentProperties != null)
+                    if (Activator.CreateInstance(t, languageEntity.GetEntity(), targetEntity, commerceCommander, context) is
+                        IComponentLocalizationMapper mapper)
                     {
-                        componentProperties.Id = component.Id;
-                        if (!componentPropertiesList.Any(x =>
-                            component.Id.Equals(x.Id, StringComparison.OrdinalIgnoreCase)))
-                        {
-                            componentPropertiesList.Add(componentProperties);
-                        }
+                        return mapper;
                     }
                 }
             }
@@ -159,7 +158,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Policy
             return null;
         }
 
-        public Component MapItemVariationComponent(CommerceEntity targetEntity, Component parentComponent, object sourceEntity, object sourceComponent, CommerceCommander commerceCommander, CommercePipelineExecutionContext context)
+        public IComponentMapper GetItemVariationComponentMapper(CommerceEntity targetEntity, Component parentComponent, ImportEntityArgument importEntityArgument, object sourceComponent, CommerceCommander commerceCommander, CommercePipelineExecutionContext context)
         {
             var mapperType = this
                 .ItemVariantionMappings
@@ -171,19 +170,22 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Policy
 
                 if (t == null)
                 {
-                    context.Abort("Component mapper type cannot be null.", context);
+                    context.Abort($"Component mapper type cannot be null. ParentComponentType={parentComponent.GetType().FullName}", context);
                 }
-
-                if (Activator.CreateInstance(t, sourceEntity, sourceComponent, targetEntity, parentComponent, commerceCommander, context) is IComponentMapper mapper)
+                else
                 {
-                    return mapper.Map();
+                    if (Activator.CreateInstance(t, importEntityArgument.SourceEntity, sourceComponent, targetEntity, parentComponent,
+                        commerceCommander, context) is IComponentMapper mapper)
+                    {
+                        return mapper;
+                    }
                 }
             }
 
             return null;
         }
 
-        public LocalizableComponentPropertiesValues GetItemVariantComponentLocalizableProperties(CommerceEntity targetEntity, Component component, object sourceEntity, object sourceVariant, ILanguageEntity languageEntity, IList<LocalizableComponentPropertiesValues> componentPropertiesList, CommerceCommander commerceCommander, CommercePipelineExecutionContext context)
+        public IComponentLocalizationMapper GetItemVariantComponentLocalizationMapper(CommerceEntity targetEntity, Component component, ILanguageEntity languageEntity, object sourceVariant, CommerceCommander commerceCommander, CommercePipelineExecutionContext context)
         {
             var mapperType = this
                 .ItemVariantionMappings
@@ -197,21 +199,11 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Policy
                 {
                     context.Abort("Component localization mapper type cannot be null.", context);
                 }
-
-                if (Activator.CreateInstance(t, sourceEntity, sourceVariant, targetEntity, component, commerceCommander, context) is IComponentLocalizationMapper mapper)
+                else
                 {
-                    var componentProperties = componentPropertiesList.FirstOrDefault(x =>
-                        component.Id.Equals(x.Id, StringComparison.OrdinalIgnoreCase));
-
-                    componentProperties = mapper.Map(languageEntity, componentProperties);
-                    if (componentProperties != null)
+                    if (Activator.CreateInstance(t, languageEntity.GetEntity(), sourceVariant, targetEntity, component, commerceCommander, context) is IComponentLocalizationMapper mapper)
                     {
-                        componentProperties.Id = component.Id;
-                        if (!componentPropertiesList.Any(x =>
-                            component.Id.Equals(x.Id, StringComparison.OrdinalIgnoreCase)))
-                        {
-                            componentPropertiesList.Add(componentProperties);
-                        }
+                        return mapper;
                     }
                 }
             }
@@ -219,7 +211,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Policy
             return null;
         }
 
-        public Component MapComponentChildComponent(CommerceEntity targetEntity, Component parentComponent, object sourceEntity, object sourceComponent, string childComponentMappingKey, CommerceCommander commerceCommander, CommercePipelineExecutionContext context)
+        public IComponentMapper GetComponentChildComponentMapper(CommerceEntity targetEntity, Component parentComponent, ImportEntityArgument importEntityArgument, object sourceComponent, string childComponentMappingKey, CommerceCommander commerceCommander, CommercePipelineExecutionContext context)
         {
             var mapperType = this
                 .ItemVariantionComponentMappings
@@ -231,23 +223,29 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Policy
 
                 if (t == null)
                 {
-                    context.Abort("Component mapper type cannot be null.", context);
+                    context.Abort($"Component mapper type cannot be null. ChildComponentMappingKey={childComponentMappingKey}", context);
                 }
-
-                if (Activator.CreateInstance(t, sourceEntity, sourceComponent, targetEntity, parentComponent, commerceCommander, context) is IComponentMapper mapper)
+                else
                 {
-                    return mapper.Map();
+                    if (Activator.CreateInstance(t, importEntityArgument.SourceEntity, sourceComponent, targetEntity,
+                        parentComponent, commerceCommander, context) is IComponentMapper mapper)
+                    {
+                        return mapper;
+                    }
                 }
             }
 
             return null;
         }
 
-        public LocalizableComponentPropertiesValues GetVariantComponentsLocalizableProperties(CommerceEntity targetEntity, Component component, object sourceEntity, object sourceVariant, ILanguageEntity languageEntity, IList<LocalizableComponentPropertiesValues> componentPropertiesList, CommerceCommander commerceCommander, CommercePipelineExecutionContext context)
+        public IComponentLocalizationMapper GetComponentChildComponentLocalizationMapper(CommerceEntity targetEntity, Component component, ILanguageEntity languageEntity, object sourceVariant, CommerceCommander commerceCommander, CommercePipelineExecutionContext context)
         {
+            var metadataPolicy = component.GetComponentMetadataPolicy();
             var mapperType = this
                 .ItemVariantionComponentMappings
-                .FirstOrDefault(x => x.Type.Equals(component.GetType().FullName, StringComparison.OrdinalIgnoreCase));
+                .FirstOrDefault(
+                    x => (metadataPolicy != null && !string.IsNullOrEmpty(metadataPolicy.MapperKey) && x.Key.Equals(metadataPolicy.MapperKey, StringComparison.OrdinalIgnoreCase))
+                        || x.Type.Equals(component.GetType().FullName, StringComparison.OrdinalIgnoreCase));
 
             if (mapperType != null)
             {
@@ -257,21 +255,12 @@ namespace Plugin.Accelerator.CatalogImport.Framework.Policy
                 {
                     context.Abort("Component localization mapper type cannot be null.", context);
                 }
-
-                if (Activator.CreateInstance(t, sourceEntity, sourceVariant, targetEntity, component, commerceCommander, context) is IComponentLocalizationMapper mapper)
+                else
                 {
-                    var componentProperties = componentPropertiesList.FirstOrDefault(x =>
-                        component.Id.Equals(x.Id, StringComparison.OrdinalIgnoreCase));
-
-                    componentProperties = mapper.Map(languageEntity, componentProperties);
-                    if (componentProperties != null)
+                    if (Activator.CreateInstance(t, languageEntity.GetEntity(), sourceVariant, targetEntity, component,
+                        commerceCommander, context) is IComponentLocalizationMapper mapper)
                     {
-                        componentProperties.Id = component.Id;
-                        if (!componentPropertiesList.Any(x =>
-                            component.Id.Equals(x.Id, StringComparison.OrdinalIgnoreCase)))
-                        {
-                            componentPropertiesList.Add(componentProperties);
-                        }
+                        return mapper;
                     }
                 }
             }
