@@ -6,7 +6,9 @@ namespace Plugin.Accelerator.CatalogImport.Sample.EntityImportHandlers
 {
     public class SourceCatalogImportHandler : CatalogImportHandler<SourceCatalog>
     {
-        public SourceCatalogImportHandler(string sourceCatalog, CommerceCommander commerceCommander, CommercePipelineExecutionContext context)
+        public SourceCatalogImportHandler(string sourceCatalog, 
+            CommerceCommander commerceCommander, 
+            CommercePipelineExecutionContext context)
             : base(sourceCatalog, commerceCommander, context)
         {
         }

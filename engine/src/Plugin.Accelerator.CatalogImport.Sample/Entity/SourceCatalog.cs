@@ -9,7 +9,6 @@ namespace Plugin.Accelerator.CatalogImport.Sample.Entity
     {
         public SourceCatalog()
         {
-            this.Parents = new List<string>();
             this.Languages = new List<LanguageEntity<SourceCatalog>>();
         }
 
@@ -21,9 +20,6 @@ namespace Plugin.Accelerator.CatalogImport.Sample.Entity
         public string DisplayName { get; set; }
 
         public string Description { get; set; }
-
-        [Parents()]
-        public IList<string> Parents { get; set; }
 
         [Languages()]
         public IList<LanguageEntity<SourceCatalog>> Languages { get; set; }
