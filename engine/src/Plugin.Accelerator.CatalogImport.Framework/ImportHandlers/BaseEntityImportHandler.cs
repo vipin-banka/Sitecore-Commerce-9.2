@@ -142,7 +142,7 @@ namespace Plugin.Accelerator.CatalogImport.Framework.ImportHandlers
             ILanguageEntity<TSourceEntity> l = languageEntity as ILanguageEntity<TSourceEntity>;
             if (l == null)
             {
-                this.Context.Abort("Language entity cannot be null", this.Context);
+                this.Context.Abort(Context.CommerceContext.AddMessage(Context.GetPolicy<KnownResultCodes>().Error, "LanguageEntityMissing", null, "Language entity cannot be null").Result, this.Context);
             }
 
             this.MapLocalizeValues(l.Entity, commerceEntity);

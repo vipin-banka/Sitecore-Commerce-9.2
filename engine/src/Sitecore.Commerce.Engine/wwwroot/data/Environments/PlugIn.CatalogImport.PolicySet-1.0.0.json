@@ -18,19 +18,16 @@
             {
               "$type": "Plugin.Accelerator.CatalogImport.Framework.Policy.EntityMapperType, Plugin.Accelerator.CatalogImport.Framework",
               "Key": "Catalog",
-              "Type": "Sitecore.Commerce.Plugin.Catalog.Catalog",
               "ImportHandlerTypeName": "Plugin.Accelerator.CatalogImport.Sample.EntityImportHandlers.SourceCatalogImportHandler, Plugin.Accelerator.CatalogImport.Sample"
             },
             {
               "$type": "Plugin.Accelerator.CatalogImport.Framework.Policy.EntityMapperType, Plugin.Accelerator.CatalogImport.Framework",
               "Key": "Category",
-              "Type": "Sitecore.Commerce.Plugin.Catalog.Category",
               "ImportHandlerTypeName": "Plugin.Accelerator.CatalogImport.Sample.EntityImportHandlers.SourceCategoryImportHandler, Plugin.Accelerator.CatalogImport.Sample"
             },
             {
               "$type": "Plugin.Accelerator.CatalogImport.Framework.Policy.EntityMapperType, Plugin.Accelerator.CatalogImport.Framework",
               "Key": "SellableItem",
-              "Type": "Sitecore.Commerce.Plugin.Catalog.SellableItem",
               "ImportHandlerTypeName": "Plugin.Accelerator.CatalogImport.Sample.EntityImportHandlers.SourceProductImportHandler, Plugin.Accelerator.CatalogImport.Sample"
             }
           ],
@@ -38,20 +35,17 @@
             {
               "$type": "Plugin.Accelerator.CatalogImport.Framework.Policy.MapperType, Plugin.Accelerator.CatalogImport.Framework",
               "Key": "ProductHierarchyRoot",
-              "Type": "Plugin.Accelerator.Catalog.Sample.Components.ProductHierarchyRootComponent",
               "FullTypeName": "Plugin.Accelerator.CatalogImport.Sample.Mappers.EntityComponentMappers.ProductHierarchyRootComponentMapper, Plugin.Accelerator.CatalogImport.Sample"
             },
             {
               "$type": "Plugin.Accelerator.CatalogImport.Framework.Policy.MapperType, Plugin.Accelerator.CatalogImport.Framework",
               "Key": "Hardware",
-              "Type": "Plugin.Accelerator.Catalog.Sample.Components.HardwareComponent",
               "FullTypeName": "Plugin.Accelerator.CatalogImport.Sample.Mappers.EntityComponentMappers.HardwareComponentMapper, Plugin.Accelerator.CatalogImport.Sample"
             }
           ],
           "ItemVariantionMappings": [
             {
               "$type": "Plugin.Accelerator.CatalogImport.Framework.Policy.MapperType, Plugin.Accelerator.CatalogImport.Framework",
-              "Type": "Sitecore.Commerce.Plugin.Catalog.ItemVariationComponent",
               "FullTypeName": "Plugin.Accelerator.CatalogImport.Sample.Mappers.ItemVariantComponentMappers.ItemVariationComponentMapper, Plugin.Accelerator.CatalogImport.Sample"
             }
           ],
@@ -59,7 +53,6 @@
             {
               "$type": "Plugin.Accelerator.CatalogImport.Framework.Policy.MapperType, Plugin.Accelerator.CatalogImport.Framework",
               "Key": "Variant",
-              "Type": "Plugin.Accelerator.Catalog.Sample.Components.VariantComponent",
               "FullTypeName": "Plugin.Accelerator.CatalogImport.Sample.Mappers.VariantComponentMappers.VariantComponentMapper, Plugin.Accelerator.CatalogImport.Sample"
             }
           ]

@@ -32,13 +32,13 @@
                         .Add<PrepImportEntityBlock>()
                         .Add<ResolveImportHandlerInstanceBlock>()
                         .Add<GetSourceEntityBlock>()
-                        .Add<ValidateEntityBlock>()
+                        .Add<ValidateSourceEntityBlock>()
                         .Add<ImportEntityBlock>();
                 })
                 .AddPipeline<IResolveEntityImportHandlerPipeline, ResolveEntityImportHandlerPipeline>(configure =>
                 {
                     configure
-                        .Add<ResolveImportHandlerInstanceBlock>();
+                        .Add<ResolveEntityImportHandlerBlock>();
                 })
                 .AddPipeline<ISetComponentsPipeline, SetComponentsPipeline>(configure =>
                 {

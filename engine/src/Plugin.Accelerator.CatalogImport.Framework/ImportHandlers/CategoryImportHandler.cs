@@ -38,7 +38,8 @@ namespace Plugin.Accelerator.CatalogImport.Framework.ImportHandlers
         {
             if (this.ParentEntityIds == null || !this.ParentEntityIds.Any())
             {
-                this.Context.Abort("Catalog must exist to create a new category.", this.Context);
+                this.Context.Abort(await Context.CommerceContext.AddMessage(Context.GetPolicy<KnownResultCodes>().Error, "CategoryCatelogNotDefined", null, "Catalog must be defined to create a new category."), this.Context);
+                return this.CommerceEntity;
             }
 
             var firstParent = this.ParentEntityIds.FirstOrDefault();
